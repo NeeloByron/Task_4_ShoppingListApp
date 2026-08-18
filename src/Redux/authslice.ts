@@ -13,6 +13,7 @@ export interface AuthState {
     token: string | null;
     loading: boolean;
     error: string | null;
+    updateUser: string | null;
 }
 
 {/*initial state*/}
@@ -20,7 +21,8 @@ const initialState: AuthState = {
     user: null,
     token: null,
     loading: false,
-    error: null
+    error: null,
+    updateUser: null,
 };
 
 {/*Slice*/}
@@ -60,6 +62,13 @@ export const authSlice = createSlice ({
       state.loading = false;
       state.error = null;
     },
+
+    updateUser: (state, action: PayloadAction<Partial<User>>) => {
+      if (state.user) {
+      state.user = { ...state.user, ...action.payload };
+      }
+    },  
+
   },
 });
 
@@ -71,5 +80,6 @@ export const {
   registerStart, 
   registerSuccess, 
   registerFailure, 
-  logout 
+  logout, 
+  updateUser
 } = authSlice.actions
