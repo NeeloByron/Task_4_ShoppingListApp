@@ -1,20 +1,6 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from '@reduxjs/toolkit';
-
-{/*user*/}
-export interface User {
-    id: string;
-    email: string;
-    name?: string;
-}
-
-export interface AuthState {
-    user: User | null;
-    token: string | null;
-    loading: boolean;
-    error: string | null;
-    updateUser: string | null;
-}
+import type { User, AuthState} from "@/Redux/authTypes"
 
 {/*initial state*/}
 const initialState: AuthState = {
@@ -30,6 +16,7 @@ export const authSlice = createSlice ({
     name: "auth",
     initialState,
     reducers: {
+      /*login action*/
     loginStart: (state) => {
       state.loading = true;
       state.error = null;
@@ -38,11 +25,13 @@ export const authSlice = createSlice ({
       state.loading = false;
       state.user = action.payload.user;
       state.token = action.payload.token;
+      state.error = null;
     },
     loginFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
     },
+    /*register action*/
     registerStart: (state) => {
       state.loading = true;
       state.error = null;
@@ -51,6 +40,7 @@ export const authSlice = createSlice ({
       state.loading = false;
       state.user = action.payload.user;
       state.token = action.payload.token;
+      state.error = null;
     },
     registerFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
@@ -62,7 +52,7 @@ export const authSlice = createSlice ({
       state.loading = false;
       state.error = null;
     },
-
+     /*Update user*/
     updateUser: (state, action: PayloadAction<Partial<User>>) => {
       if (state.user) {
       state.user = { ...state.user, ...action.payload };
