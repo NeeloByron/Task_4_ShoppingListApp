@@ -8,7 +8,6 @@ const initialState: AuthState = {
     token: null,
     loading: false,
     error: null,
-    updateUser: null,
 };
 
 {/*Slice*/}

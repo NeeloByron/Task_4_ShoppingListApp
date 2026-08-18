@@ -12,7 +12,6 @@ export interface AuthState {
     token: string | null;
     loading: boolean;
     error: string | null;
-    updateUser: string | null;
 }
 
 export interface LoginCredentials {
