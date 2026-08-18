@@ -27,3 +27,5 @@
 ### Data Persistence
 - JSON Server 
 - Redux State Management
+
+- https://medium.com/@panat.siriwong/lets-initialize-redux-the-toolkit-in-react-typescript-c533991fc97c
