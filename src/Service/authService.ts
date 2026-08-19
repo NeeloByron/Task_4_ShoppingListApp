@@ -1,4 +1,3 @@
-import { logout } from "@/Redux/authslice";
 import type { User, RegisterData, LoginCredentials } from "@/Redux/authTypes";
 
 const API_URL = import.meta.env.NEXT_PUBLIC_API_URL 
