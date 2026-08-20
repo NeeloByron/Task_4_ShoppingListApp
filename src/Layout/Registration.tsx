@@ -1,8 +1,11 @@
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { Input } from "@/components/ui/input"
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { useAppDispatch, useAppSelector } from "@/Redux/store"
+import { registerUser } from '@/Redux/authThunks'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -12,9 +15,37 @@ const registerSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
 })
 
+type RegisterFormData = z.infer<typeof registerSchema>
+
 export const Register = () => {
-  const form = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
+
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
+  //Redux store
+  const { loading, error, user, token} = useAppDispatch((state) => state.auth)
+
+  const form = useForm<RegisterFormData>({
+    resolver: async (values) => {
+      const result = registerSchema.safeParse(values)
+
+      if (result.success) {
+        return { values: result.data, errors: {} }
+      }
+
+      const errors = result.error.issues.reduce<Record<string, { type: string; message: string }>>(
+        (accumulator, issue) => {
+          const field = issue.path[0]
+          if (typeof field === "string" && !accumulator[field]) {
+            accumulator[field] = { type: issue.code, message: issue.message }
+          }
+          return accumulator
+        },
+        {},
+      )
+
+      return { values: {}, errors }
+    },
     defaultValues: { name: "", surname: "", email: "", cellNumber: "", password: "" },
   })
 
@@ -47,7 +78,7 @@ export const Register = () => {
 
             <label className="block space-y-2">
               <span className="text-sm font-medium">Email Address</span>
-              <Input type="email" placeholder="john@example.com" {...form.register("email")} />
+              <Input type="email" placeholder="name@example.com" {...form.register("email")} />
               <span className="text-sm text-red-500">{form.formState.errors.email?.message}</span>
             </label>
 
