@@ -1,10 +1,12 @@
 import { Register } from '@/Layout/Registration'
+import { Login } from '@/Layout/Login'
 
 
 export const ShoppingListApp = () => {
   return (
     <>
-      <Register />
+      <Login />
+      {/*<Register />*/}
     </>
   )
 }
