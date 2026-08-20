@@ -117,7 +117,7 @@ export const Register = () => {
         <div className='w-full max-w-md space-y-6 rounded-xl border bg-white p-8 shadow-sm'>
           <div className='space-y-2 text-center'>
             <h1 className='text-2xl font-bold tracking-tight'>Create an account</h1>
-            <p className='text-sm text-gray-500'>Enter your details to register</p>
+            <p className='text-sm text-gray-500'>Start organizing your shopping</p>
           </div>
 
           {error && (
@@ -143,39 +143,39 @@ export const Register = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
              <label className='block space-y-2'>
                 <span className='text-sm font-medium'>Name</span>
-                <Input placeholder='Name' className='rounded-md'{...form.register('name')} disabled={loading} />
+                <Input placeholder='First Name' className='rounded-md'{...form.register('name')} disabled={loading} />
                 <span className='text-sm text-red-500'>{form.formState.errors.name?.message}</span>
               </label>
               
              <label className='block space-y-2'>
                 <span className='text-sm font-medium'>Surname</span>
-                <Input placeholder='Surname' className='rounded-md' {...form.register('surname')} disabled={loading} />
+                <Input placeholder='Last Name' className='rounded-md' {...form.register('surname')} disabled={loading} />
                 <span className='text-sm text-red-500'>{form.formState.errors.surname?.message}</span>
               </label>
 
             <label className='block space-y-2'>
               <span className='text-sm font-medium'>Email Address</span>
-              <Input type='email' placeholder='name@example.com' className='rounded-md' {...form.register('email')} disabled={loading} />
+              <Input type='email' placeholder='name@email.com' className='rounded-md' {...form.register('email')} disabled={loading} />
               <span className='text-sm text-red-500'>{form.formState.errors.email?.message}</span>
             </label>
 
             <label className='block space-y-2'>
               <span className='text-sm font-medium'>Cell Number</span>
-              <Input type='tel' placeholder='0821234567' className='rounded-md' {...form.register('cellNumber')} disabled={loading} />
+              <Input type='tel' placeholder='082 123 4567' className='rounded-md' {...form.register('cellNumber')} disabled={loading} />
               <span className="text-sm text-red-500">{form.formState.errors.cellNumber?.message}</span>
             </label>
 
             <label className='block space-y-2'>
               <span className='text-sm font-medium'>Password</span>
-              <Input type='password' placeholder='••••••••' className='rounded-md' {...form.register('password')} disabled={loading}/>
+              <Input type='password' placeholder='Create a password' className='rounded-md' {...form.register('password')} disabled={loading}/>
               <span className='text-sm text-red-500'>{form.formState.errors.password?.message}</span>
             </label>
 
-            <Button type='submit' className='w-full rounded-md' disabled={loading}>Sign Up</Button>
+            <Button type='submit' className='w-full rounded-md' disabled={loading}>Create account</Button>
         </form>
 
          <p className='text-center text-sm text-gray-600'>Already have an account?
-            <a href='/login' className='font-medium text-blue-600 hover:underline'>   Sign in</a>      
+            <a href='/login' className='font-medium text-blue-600 hover:underline'>   Log in</a>      
          </p>
       </div>
 

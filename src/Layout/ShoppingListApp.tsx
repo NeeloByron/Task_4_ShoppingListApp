@@ -5,8 +5,8 @@ import { Login } from '@/Layout/Login'
 export const ShoppingListApp = () => {
   return (
     <>
-      <Login />
-      {/*<Register />*/}
+      {/*<Login />*/}
+      <Register />
     </>
   )
 }
