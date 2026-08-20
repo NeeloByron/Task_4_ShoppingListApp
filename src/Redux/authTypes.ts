@@ -24,5 +24,5 @@ export interface RegisterData {
     password: string;
     name: string;
     surname: string;
-    cellNumber: number;
+    cellNumber: string | number;
 }

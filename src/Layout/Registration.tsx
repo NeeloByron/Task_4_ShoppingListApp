@@ -78,6 +78,7 @@ export const Register = () => {
   }, [user, token, navigate])
 
   async function onSubmit(values: RegisterFormData) {
+    setSubmitAttempted(true)
     try {
       // Match the RegisterData shape expected by the thunk.
       const registerData = {
@@ -94,22 +95,31 @@ export const Register = () => {
        console.log('Registration dispatched successfully')
 
     } catch (err: any) {
-      console.error('Registration failed:', err)
+      console.error('Registration failed - Full error object:', err)
+      console.error('Error Message:', err?.message)
 
       let errorMessage = 'Registration failed. Please try again.'
+      
+      const errorMsg = err?.message || String(err) || '';
+      const lowerMsg = errorMsg.toLowerCase();
 
-      if (err.message?.toLowerCase().includes('already exists') || 
-            err.message?.toLowerCase().includes('already exist') ||
-            err.message?.toLowerCase().includes('user with this email')) {
+      if (lowerMsg.includes('already exists') || 
+            lowerMsg.includes('already exist') ||
+            lowerMsg.includes('user with this email') ||
+            errorMsg.includes('email already')) {
             errorMessage = 'This email is already registered. Please use a different email or log in.'
+            console.log('Set "already exists" message')
         } 
-        else if (err.message?.toLowerCase().includes('network') || 
-                 err.message?.toLowerCase().includes('fetch') || 
-                 err.message?.toLowerCase().includes('connection')) {
+        else if (lowerMsg.includes('network') || 
+                 lowerMsg.includes('fetch') || 
+                 lowerMsg.includes('connection') ||
+                 lowerMsg.includes('failed to fetch')) {
             errorMessage = 'Cannot connect to server. Make sure json-server is running on port 5000'
+            console.log('Set network error message')
         } 
-        else if (err.message) {
-            errorMessage = err.message
+        else if (errorMsg) {
+            errorMessage = errorMsg
+            console.log('Using error message as is')
         }
       form.setError('root', { message: errorMessage })
     }

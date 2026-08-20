@@ -17,7 +17,7 @@ export const authService = {
             //find user by login credentials(email and password)
             const user = users.find((u: any) => 
                 u.email === credentials.email && 
-                u.email === credentials.password
+                u.password === credentials.password
             );
 
             if (!user) {
@@ -41,11 +41,18 @@ export const authService = {
         try {
             //checks if user exists
         const Checkresponse = await fetch(`${API_URL}/users`);
-        const users = await Checkresponse.json();
 
-        const exitingUser = users.find((u: any) => u.email === data.email);
-         if (exitingUser) {
-            throw new Error('User with this email already exits');
+        if (!Checkresponse.ok) {
+            throw new Error('Failed to check existing users');
+        }
+
+        const users = await Checkresponse.json();
+        //does this email exists - case sensentive 
+
+        const exitingUser = users.find((u: any) => u.email.toLowerCase() === data.email.toLowerCase());
+        
+        if (exitingUser) {
+            throw new Error('User with this email already exists');
          }
 
           //create new user in json server
@@ -55,10 +62,10 @@ export const authService = {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    firstName: data.name,
-                    lastName: data.surname,
+                    name: data.name,
+                    surname: data.surname,
                     email: data.email,
-                    phoneNumber: data.cellNumber,
+                    cellNumber: data.cellNumber,
                     password: data.password,
                     createdAt: new Date().toISOString()
                 }),
@@ -84,7 +91,7 @@ export const authService = {
         }
     },
 
-    async logout(token: string): Promise<void> {
+    async logout(_token: string): Promise<void> {
         // For json-server
         console.log('User logged out');
         return Promise.resolve();
