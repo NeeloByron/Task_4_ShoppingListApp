@@ -98,14 +98,19 @@ export const Register = () => {
 
       let errorMessage = 'Registration failed. Please try again.'
 
-      if (err.message?.includes('Network')) {
-        errorMessage = 'Cannot connect to server. Please check your internet connection.'
-      } else if (err.message?.includes('json')) {
-        errorMessage = 'Server returned an invalid response. Please contact support.'
-      } else if (err.message) {
-        errorMessage = err.message
-      }
-
+      if (err.message?.toLowerCase().includes('already exists') || 
+            err.message?.toLowerCase().includes('already exist') ||
+            err.message?.toLowerCase().includes('user with this email')) {
+            errorMessage = 'This email is already registered. Please use a different email or log in.'
+        } 
+        else if (err.message?.toLowerCase().includes('network') || 
+                 err.message?.toLowerCase().includes('fetch') || 
+                 err.message?.toLowerCase().includes('connection')) {
+            errorMessage = 'Cannot connect to server. Make sure json-server is running on port 5000'
+        } 
+        else if (err.message) {
+            errorMessage = err.message
+        }
       form.setError('root', { message: errorMessage })
     }
   }

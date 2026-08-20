@@ -1,4 +1,15 @@
 {
-  "users": [],
-  "posts": []
+  "users": [
+    {
+      "firstName": "Byron Neelo",
+      "lastName": "Neelo",
+      "email": "byronnkhuna@gmail.com",
+      "phoneNumber": 792985272,
+      "password": "298595968",
+      "createdAt": "2026-08-20T21:05:38.643Z",
+      "id": "6GEb32BqM1k"
+    }
+  ],
+  "posts": [],
+  "$schema": "./node_modules/json-server/schema.json"
 }

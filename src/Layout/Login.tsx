@@ -21,7 +21,7 @@ export const Login = () => {
              <form  className='space-y-4'>
                <label className='block space-y-2'>
                  <span className='text-sm font-medium'>Email Address</span>
-                 <Input type='email' placeholder='name@email.com' className='rounded-md' {...form.register('email')} disabled={loading} />
+                 <Input type='email' placeholder='name@email.com' autoComplete='email' className='rounded-md' {...form.register('email')} disabled={loading} />
                  <span className='text-sm text-red-500'>{form.formState.errors.email?.message}</span>
               </label>
               
