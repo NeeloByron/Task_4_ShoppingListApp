@@ -4,10 +4,8 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useAppDispatch, useAppSelector} from "@/Redux/store"
 import { registerUser } from '@/Redux/authThunks'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import authReducer from '@/Redux/authslice'
-
 
 
 const registerSchema = z.object({
@@ -24,6 +22,7 @@ export const Register = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const [submitAttemped, setSubmitAttempted] = useState(false)
 
   //Redux store
   const { loading, error, user, token} = useAppSelector((state) => state.auth)
@@ -78,13 +77,6 @@ export const Register = () => {
     }
   }, [user, token, navigate])
 
-   //clear error 
-  useEffect(() => {
-    return () => {
-    console.log('Component unmounting')
-    }
-  }, [dispatch])
-
   async function onSubmit(values: RegisterFormData) {
     try {
       // Match the RegisterData shape expected by the thunk.
@@ -95,14 +87,26 @@ export const Register = () => {
         cellNumber: Number(values.cellNumber),
         password: values.password,
       }
-
+       
+      console.log('Submitting registration data:', registerData)
       //dispatch authThunk
        await dispatch(registerUser(registerData)).unwrap()
-
        console.log('Registration dispatched successfully')
 
-    } catch (err) {
+    } catch (err: any) {
       console.error('Registration failed:', err)
+
+      let errorMessage = 'Registration failed. Please try again.'
+
+      if (err.message?.includes('Network')) {
+        errorMessage = 'Cannot connect to server. Please check your internet connection.'
+      } else if (err.message?.includes('json')) {
+        errorMessage = 'Server returned an invalid response. Please contact support.'
+      } else if (err.message) {
+        errorMessage = err.message
+      }
+
+      form.setError('root', { message: errorMessage })
     }
   }
 
@@ -119,6 +123,20 @@ export const Register = () => {
           {error && (
           <div className='rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200'>
             {error}
+          </div>
+        )}
+
+        {/* Display form root error */}
+        {form.formState.errors.root && (
+          <div className='rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200'>
+            {form.formState.errors.root.message}
+          </div>
+        )}
+
+        {/* Show connection error if submit attempted and still loading */}
+        {submitAttemped && loading && (
+          <div className='rounded-md bg-blue-50 p-3 text-sm text-blue-600 border border-blue-200'>
+            Attempting to connect to server...
           </div>
         )}
 
