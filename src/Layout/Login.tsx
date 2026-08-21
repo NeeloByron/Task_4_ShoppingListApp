@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import { UserIcon } from "@animateicons/react/lucide";
 
 export const Login = () => {
   const form = useForm<{ email: string }>()
@@ -14,6 +15,7 @@ export const Login = () => {
         {/*create user side*/}
         <div className='w-full max-w-md space-y-6 rounded-xl border bg-white p-8 shadow-sm'>
           <div className='space-y-2 text-center'>
+            <UserIcon size={50} color="#000000" duration={1} />
             <h1 className='text-2xl font-bold tracking-tight'>Welcome back</h1>
              <p className='text-sm text-gray-500'>Login in your lists</p>
              </div>

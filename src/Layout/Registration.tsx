@@ -14,7 +14,11 @@ const registerSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   cellNumber: z.string().min(10, "Cell number must be at least 10 digits"),
   password: z.string().min(8, "Password must be at least 8 characters"),
-})
+  confirmPassword: z.string().min(8, "Please confirm your password"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"], 
+});
 
 type RegisterFormData = z.infer<typeof registerSchema>
 
@@ -51,7 +55,7 @@ export const Register = () => {
 
       return { values: {}, errors }
     },
-    defaultValues: { name: "", surname: "", email: "", cellNumber: "", password: "" },
+    defaultValues: { name: "", surname: "", email: "", cellNumber: "", password: "", confirmPassword: "" },
   })
 
   //clear redux errors when users type
@@ -87,6 +91,7 @@ export const Register = () => {
         email: values.email,
         cellNumber: Number(values.cellNumber),
         password: values.password,
+        
       }
        
       console.log('Submitting registration data:', registerData)
@@ -183,6 +188,12 @@ export const Register = () => {
             <label className='block space-y-2'>
               <span className='text-sm font-medium'>Password</span>
               <Input type='password' placeholder='Create a password' className='rounded-md' {...form.register('password')} disabled={loading}/>
+              <span className='text-sm text-red-500'>{form.formState.errors.password?.message}</span>
+            </label>
+
+            <label className='block space-y-2'>
+              <span className='text-sm font-medium'>Confirm Password</span>
+              <Input type='password' placeholder='Re-enter password' className='rounded-md' {...form.register('confirmPassword')} disabled={loading}/>
               <span className='text-sm text-red-500'>{form.formState.errors.password?.message}</span>
             </label>
 
