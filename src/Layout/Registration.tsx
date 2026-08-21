@@ -27,6 +27,7 @@ export const Register = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [submitAttemped, setSubmitAttempted] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
 
   //Redux store
   const { loading, error, user, token} = useAppSelector((state) => state.auth)
@@ -73,16 +74,27 @@ export const Register = () => {
     }
   }, [error])
 
-  //registration successfull
+  //success message then navigate 
   useEffect(() => {
     if (user && token) {
-      console.log('Registration successful, navigating to home page')
-      navigate('/dashboard')
+      console.log('Registration successful!')
+      setShowSuccess(true)
+      
+      console.log('Registration successful!')
+      const timer = setTimeout(() => {
+        navigate('/dashboard')
+      }, 3000)
+
+      return () => {
+        clearTimeout(timer)
+        console.log('Timer cleared')
+      }
     }
   }, [user, token, navigate])
 
   async function onSubmit(values: RegisterFormData) {
     setSubmitAttempted(true)
+    setShowSuccess(false)
     try {
       // Match the RegisterData shape expected by the thunk.
       const registerData = {
@@ -91,7 +103,6 @@ export const Register = () => {
         email: values.email,
         cellNumber: Number(values.cellNumber),
         password: values.password,
-        
       }
        
       console.log('Submitting registration data:', registerData)
@@ -139,7 +150,36 @@ export const Register = () => {
             <h1 className='text-2xl font-bold tracking-tight'>Create an account</h1>
             <p className='text-sm text-gray-500'>Start organizing your shopping</p>
           </div>
+           
+           {/*success notification */}
+            {showSuccess && (
+            <div role='alert' className='rounded-md border border-green-500 bg-green-50 p-4 shadow-sm'>
+             <div className='flex items-start gap-4'>
+              <svg
+                aria-hidden='true'
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                strokeWidth='1.5'
+                stroke='currentColor'
+                className='-mt-0.5 size-6 text-green-700'
+                 >
+               <path
+               strokeLinecap='round'
+               strokeLinejoin='round'
+               d='M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+               />
+             </svg>
 
+            <div className='flex-1'>
+             <strong className='block leading-tight font-medium text-green-800'>Account created successfully!</strong>
+             <span className='block text-xs text-green-500 mt-0.5'>Redirecting to dashboard...</span>
+            </div>
+           </div>
+         </div>
+       )}
+
+           {/* Redux error*/}
           {error && (
           <div className='rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200'>
             {error}
@@ -153,51 +193,89 @@ export const Register = () => {
           </div>
         )}
 
-        {/* Show connection error if submit attempted and still loading */}
-        {submitAttemped && loading && (
-          <div className='rounded-md bg-blue-50 p-3 text-sm text-blue-600 border border-blue-200'>
-            Attempting to connect to server...
-          </div>
+        {/* loading indicator */}
+        {submitAttemped && loading && !showSuccess && (
+        <div className="inline-flex items-center gap-3" role="status">
+          <svg
+            className="size-6 animate-spin text-gray-600"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+           ></circle>
+
+            <path
+           className="opacity-75"
+           fill="currentColor"
+           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+           ></path>
+          </svg>
+         <p className="font-medium text-gray-700">Creating your account...</p>
+       </div>
         )}
 
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
              <label className='block space-y-2'>
                 <span className='text-sm font-medium'>Name</span>
-                <Input placeholder='First Name' className='rounded-md'{...form.register('name')} disabled={loading} />
+                <Input placeholder='First Name' className='rounded-md'{...form.register('name')} disabled={loading || showSuccess} />
                 <span className='text-sm text-red-500'>{form.formState.errors.name?.message}</span>
               </label>
               
              <label className='block space-y-2'>
                 <span className='text-sm font-medium'>Surname</span>
-                <Input placeholder='Last Name' className='rounded-md' {...form.register('surname')} disabled={loading} />
+                <Input placeholder='Last Name' className='rounded-md' {...form.register('surname')} disabled={loading || showSuccess} />
                 <span className='text-sm text-red-500'>{form.formState.errors.surname?.message}</span>
               </label>
 
             <label className='block space-y-2'>
               <span className='text-sm font-medium'>Email Address</span>
-              <Input type='email' placeholder='name@email.com' className='rounded-md' {...form.register('email')} disabled={loading} />
+              <Input type='email' placeholder='name@email.com' className='rounded-md' {...form.register('email')} disabled={loading || showSuccess} />
               <span className='text-sm text-red-500'>{form.formState.errors.email?.message}</span>
             </label>
 
             <label className='block space-y-2'>
               <span className='text-sm font-medium'>Cell Number</span>
-              <Input type='tel' placeholder='082 123 4567' className='rounded-md' {...form.register('cellNumber')} disabled={loading} />
+              <Input type='tel' placeholder='082 123 4567' className='rounded-md' {...form.register('cellNumber')} disabled={loading || showSuccess} />
               <span className="text-sm text-red-500">{form.formState.errors.cellNumber?.message}</span>
             </label>
 
             <label className='block space-y-2'>
               <span className='text-sm font-medium'>Password</span>
-              <Input type='password' placeholder='Create a password' className='rounded-md' {...form.register('password')} disabled={loading}/>
+              <Input type='password' placeholder='Create a password' className='rounded-md' {...form.register('password')} disabled={loading || showSuccess}/>
               <span className='text-sm text-red-500'>{form.formState.errors.password?.message}</span>
             </label>
 
             <label className='block space-y-2'>
               <span className='text-sm font-medium'>Confirm Password</span>
-              <Input type='password' placeholder='Re-enter password' className='rounded-md' {...form.register('confirmPassword')} disabled={loading}/>
-              <span className='text-sm text-red-500'>{form.formState.errors.password?.message}</span>
+              <Input type='password' placeholder='Re-enter password' className='rounded-md' {...form.register('confirmPassword')} disabled={loading || showSuccess}/>
+              <span className='text-sm text-red-500'>{form.formState.errors.confirmPassword?.message}</span>
             </label>
 
-            <Button type='submit' className='w-full rounded-md' disabled={loading}>Create account</Button>
+            <Button type='submit' className='w-full rounded-md' disabled={loading || showSuccess}>
+             {loading ? (
+              <span className='flex items-center justify-center gap-2'>
+                <span className='h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent' />
+                Creating account...
+              </span>
+             ) : showSuccess ? (
+              <span className='flex items-center justify-center gap-2'>
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                Success!
+              </span>
+              ) : (
+              'Create account'
+            )}
+            </Button>
         </form>
 
          <p className='text-center text-sm text-gray-600'>Already have an account?

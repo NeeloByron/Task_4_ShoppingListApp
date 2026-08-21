@@ -20,7 +20,7 @@ type LoginFormData = z.infer<typeof loginSchema>
 export const Login = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [submitAttempted, setSubmitAttemped] = useEffect(false)
+  const [submitAttempted, setSubmitAttemped] = useState(false)
 
   //Redux store 
   const { loading, error, user, token } = useAppSelector((state) => state.auth)
@@ -34,7 +34,7 @@ export const Login = () => {
         return{ values: result.data, errors: {} }
       }
 
-      const errors = result.error.issues.reduce<Record<string, { type: string; messsage: string }>> (
+      const errors = result.error.issues.reduce<Record<string, { type: string; message: string }>> (
         (accumulator, issue) => {
           const field = issue.path[0]
           if (typeof field === "string" && !accumulator[field]) {
@@ -148,7 +148,7 @@ export const Login = () => {
                </label>
                 
                 <p className='text-end text-sm text-gray-600'>
-                  <a href='/login' className='font-medium text-blue-600 hover:underline'>   Forgot password?</a>
+                  <Link to='/forgot-password' className='font-medium text-blue-600 hover:underline'>   Forgot password?</Link>
                 </p>
 
                <Button type='submit' className='w-full rounded-md' disabled={loading}>{loading ? (
