@@ -7,6 +7,7 @@ import * as z from 'zod'
 import { useAppDispatch, useAppSelector } from '@/Redux/store'
 import { loginUser } from '@/Redux/authThunks'
 import { useEffect, useRef, useState } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
 
 // Zod schema login validation
 const loginSchema = z.object({
@@ -21,6 +22,7 @@ export const Login = () => {
   const navigate = useNavigate()
   const [submitAttempted, setSubmitAttempted] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   //Redux store 
   const { loading, error, user, token } = useAppSelector((state) => state.auth)
@@ -171,8 +173,18 @@ export const Login = () => {
               </label>
               
                <label className='block space-y-2'>
-                 <span className='text-sm font-medium'>Password</span>
-                 <Input type='password' placeholder='Enter password' className='rounded-md' {...form.register('password')} disabled={loading || showSuccess}/>
+                <span className='text-sm font-medium'>Password</span>
+                 <div className='relative'>
+                   <Input type={showPassword ? 'text' : 'password'} placeholder='Enter password' className='rounded-md pr-10' {...form.register('password')} disabled={loading || showSuccess}/>
+                    <button
+                     type='button'
+                     onClick={() => setShowPassword((prev) => !prev)}
+                     className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700'
+                     tabIndex={-1}
+                    >
+                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                   </button>
+                  </div>
                  <span className='text-sm text-red-500'>{form.formState.errors.password?.message}</span>
                </label>
                 

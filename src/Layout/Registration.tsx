@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector} from "@/Redux/store"
 import { registerUser } from '@/Redux/authThunks'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { Eye, EyeOff } from 'lucide-react'
 
 
 const registerSchema = z.object({
@@ -28,6 +29,8 @@ export const Register = () => {
   const navigate = useNavigate()
   const [submitAttemped, setSubmitAttempted] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   //Redux store
   const { loading, error, user, token} = useAppSelector((state) => state.auth)
@@ -249,13 +252,33 @@ export const Register = () => {
 
             <label className='block space-y-2'>
               <span className='text-sm font-medium'>Password</span>
-              <Input type='password' placeholder='Create a password' className='rounded-md' {...form.register('password')} disabled={loading || showSuccess}/>
+              <div className='relative'>
+                <Input type={showPassword ? 'text' : 'password'} placeholder='Create a password' className='rounded-md pr-10' {...form.register('password')} disabled={loading || showSuccess}/>
+                <button
+                  type='button'
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700'
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
               <span className='text-sm text-red-500'>{form.formState.errors.password?.message}</span>
             </label>
 
             <label className='block space-y-2'>
-              <span className='text-sm font-medium'>Confirm Password</span>
-              <Input type='password' placeholder='Re-enter password' className='rounded-md' {...form.register('confirmPassword')} disabled={loading || showSuccess}/>
+             <span className='text-sm font-medium'>Confirm Password</span>
+               <div className='relative'>
+                 <Input type={showConfirmPassword ? 'text' : 'password'} placeholder='Re-enter password' className='rounded-md pr-10' {...form.register('confirmPassword')} disabled={loading || showSuccess}/>
+                 <button
+                   type='button'
+                   onClick={() => setShowConfirmPassword((prev) => !prev)}
+                   className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700'
+                   tabIndex={-1}
+                >
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                 </button>
+               </div>
               <span className='text-sm text-red-500'>{form.formState.errors.confirmPassword?.message}</span>
             </label>
 

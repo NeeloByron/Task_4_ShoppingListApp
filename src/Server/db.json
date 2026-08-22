@@ -17,6 +17,15 @@
       "password": "878ad9afa89afcb3ac776530280056d8484570fe6c70d6f1ba1462638a1e1a90",
       "createdAt": "2026-08-22T19:22:13.347Z",
       "id": "SNNjcpKxWoY"
+    },
+    {
+      "name": "Bright",
+      "surname": "Bruce",
+      "email": "brighton@gmail.com",
+      "cellNumber": 792985272,
+      "password": "878ad9afa89afcb3ac776530280056d8484570fe6c70d6f1ba1462638a1e1a90",
+      "createdAt": "2026-08-22T19:59:09.713Z",
+      "id": "EadVJBcE3Do"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
