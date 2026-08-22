@@ -17,6 +17,15 @@
       "password": "87456321",
       "createdAt": "2026-08-21T21:51:22.818Z",
       "id": "jzkPXb1Ye1w"
+    },
+    {
+      "name": "fddgfdfg",
+      "surname": "dfggdgd",
+      "email": "me@gmail.com",
+      "cellNumber": 5185165206,
+      "password": "0792985272",
+      "createdAt": "2026-08-22T09:25:59.188Z",
+      "id": "P6gVuIvRjVU"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { useAppDispatch, useAppSelector} from "@/Redux/store"
 import { registerUser } from '@/Redux/authThunks'
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 
 const registerSchema = z.object({
@@ -279,7 +279,7 @@ export const Register = () => {
         </form>
 
          <p className='text-center text-sm text-gray-600'>Already have an account?
-            <a href='/login' className='font-medium text-blue-600 hover:underline'>   Log in</a>      
+            <Link to='/login' className='font-medium text-blue-600 hover:underline'>   Log in</Link>      
          </p>
       </div>
 

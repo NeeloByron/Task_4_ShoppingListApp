@@ -1,6 +1,8 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from '@reduxjs/toolkit';
 import type { User, AuthState} from "@/Redux/authTypes"
+import { loginUser, registerUser, logoutUser } from '@/Redux/authThunks';
+
 
 {/*initial state*/}
 const initialState: AuthState = {
@@ -15,60 +17,61 @@ export const authSlice = createSlice ({
     name: "auth",
     initialState,
     reducers: {
-      /*login action*/
-    loginStart: (state) => {
-      state.loading = true;
-      state.error = null;
+      logout: (state) => {
+        state.user = null;
+        state.token = null;
+        state.loading = false;
+        state.error = null;
+     },
+      updateUser: (state, action: PayloadAction<Partial<User>>) => {
+        if (state.user) {
+         state.user = { ...state.user, ...action.payload };
+        }
+      },
+       clearError: (state) => {
+        state.error = null;
+       },
     },
-    loginSuccess: (state, action: PayloadAction<{ user: User; token: string }>) => {
-      state.loading = false;
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      state.error = null;
-    },
-    loginFailure: (state, action: PayloadAction<string>) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    /*register action*/
-    registerStart: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    registerSuccess: (state, action: PayloadAction<{ user: User; token: string }>) => {
-      state.loading = false;
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      state.error = null;
-    },
-    registerFailure: (state, action: PayloadAction<string>) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    logout: (state) => {
-      state.user = null;
-      state.token = null;
-      state.loading = false;
-      state.error = null;
-    },
-     /*Update user*/
-    updateUser: (state, action: PayloadAction<Partial<User>>) => {
-      if (state.user) {
-      state.user = { ...state.user, ...action.payload };
-      }
-    },  
 
-  },
-});
+  extraReducers: (builder) => {
+     builder
+       .addCase(loginUser.pending, (state) => {
+         state.loading = true;
+         state.error = null;
+       })
 
+       .addCase(loginUser.fulfilled, (state, action) =>{
+         state.loading = false;
+         state.user = action.payload.user;
+         state.token = action.payload.token;
+         state.error = null;
+       })
+
+       .addCase(loginUser.rejected, (state, action) => {
+         state.loading = false;
+         state.error = action.payload as string;
+       })
+
+       .addCase(registerUser.pending, (state) => {
+         state.loading = true;
+         state.error = null;
+       })
+
+       .addCase(registerUser.fulfilled, (state, action) => {
+         state.loading = false;
+         state.user = action.payload.user;
+         state.token = action.payload.token;
+         state.error = null;
+       })
+
+       .addCase(logoutUser.fulfilled, (state) => {
+         state.user = null;
+         state.token = null;
+         state.loading = false;
+         state.error = null;
+       });
+      },
+  });
+     
 export default authSlice.reducer;
-export const { 
-  loginStart, 
-  loginSuccess, 
-  loginFailure, 
-  registerStart, 
-  registerSuccess, 
-  registerFailure, 
-  logout, 
-  updateUser
-} = authSlice.actions
+export const { logout, updateUser, clearError} = authSlice.actions
