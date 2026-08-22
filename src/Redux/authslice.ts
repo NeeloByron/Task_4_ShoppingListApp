@@ -2,6 +2,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from '@reduxjs/toolkit';
 import type { User, AuthState} from "@/Redux/authTypes"
 import { loginUser, registerUser, logoutUser } from '@/Redux/authThunks';
+import { act } from "react";
 
 
 {/*initial state*/}
@@ -50,6 +51,8 @@ export const authSlice = createSlice ({
        .addCase(loginUser.rejected, (state, action) => {
          state.loading = false;
          state.error = action.payload as string;
+         state.user = null;
+         state.token = null;
        })
 
        .addCase(registerUser.pending, (state) => {
@@ -62,6 +65,13 @@ export const authSlice = createSlice ({
          state.user = action.payload.user;
          state.token = action.payload.token;
          state.error = null;
+       })
+
+       .addCase(registerUser.rejected, (state, action) => {
+         state.loading = false;
+         state.error = action.payload as string;
+         state.user = null;
+         state.token = null;
        })
 
        .addCase(logoutUser.fulfilled, (state) => {

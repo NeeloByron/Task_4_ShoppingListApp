@@ -20,6 +20,7 @@
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "crypto-js": "^4.2.0",
     "json-server": "^1.0.0-beta.15",
     "lucide-react": "^1.31.0",
     "react": "^19.2.8",
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/crypto-js": "^4.2.2",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",

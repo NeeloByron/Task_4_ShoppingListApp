@@ -1,4 +1,3 @@
-import React from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useNavigate, Link } from 'react-router-dom'
@@ -21,6 +20,7 @@ export const Login = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [submitAttempted, setSubmitAttempted] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
 
   //Redux store 
   const { loading, error, user, token } = useAppSelector((state) => state.auth)
@@ -71,27 +71,28 @@ export const Login = () => {
     //Navigate on successful login
     useEffect(() => {
       if (user && token) {
-        console.log('Login successful')
-        navigate('/dashboard')
-      }
-    }, [user, token, navigate])
+          setShowSuccess(true)
+          const timer = setTimeout(() => {
+            navigate('/dashboard')
+        }, 1500)
+         return () => {
+          clearTimeout(timer)
+         }
+        }
+        }, [user, token, navigate])
 
     async function  onSubmit(values: LoginFormData) {
       setSubmitAttempted(true)
+      setShowSuccess(false)
       try {
         const loginData = {
           email: values.email,
           password: values.password,
         }
 
-        console.log('Submitting login data:', { email: loginData.email})
         await dispatch(loginUser(loginData)).unwrap()
-        console.log('login dispatched succesfully')
 
       } catch (err: any) {
-        console.error('login failed - Full error object:', err)
-        console.log('Error Message:', err?.message)
-
         let errorMessage = 'Login failed. Please try again.'
 
         const errorMsg = err?.message || String(err) || '';
@@ -101,14 +102,12 @@ export const Login = () => {
             lowerMsg.includes('invalid password') ||
             lowerMsg.includes('invalid credentials')) {
               errorMessage = 'Invalid email or password. Please try again.'
-              console.log('Set invalid credentials message')
             }
             else if (lowerMsg.includes('network') ||
                      lowerMsg.includes('fetch') ||
                      lowerMsg.includes('connection') ||
                      lowerMsg.includes('failed to fetch')) {
                      errorMessage = 'Cannot connect to server. Make sure json-server is running on port 5000'
-                     console.log('Set network error message')
                      }
                      else if (errorMsg) {
                       errorMessage = errorMsg 
@@ -125,27 +124,55 @@ export const Login = () => {
         <div className='w-full max-w-md space-y-6 rounded-xl border bg-white p-8 shadow-sm'>
           <div className='space-y-2 text-center'>
             <UserIcon size={50} color="#000000" duration={1} />
-            <h1 className='text-2xl font-bold tracking-tight'>Welcome back</h1>
-             <p className='text-sm text-gray-500'>Login in your lists</p>
+            <h1 className='text-2xl font-bold tracking-tight'>Login</h1>
+             <p className='text-sm text-gray-500'>Login to your list</p>
              </div>
 
+              {/*Success message notification*/}
+             {showSuccess && (
+             <div role='alert' className='rounded-md border border-green-500 bg-green-50 p-4 shadow-sm'>
+               <div className='flex items-start gap-4'>
+                 <svg
+                   aria-hidden='true'
+                   xmlns='http://www.w3.org/2000/svg'
+                   fill='none'
+                   viewBox='0 0 24 24'
+                   strokeWidth='1.5'
+                   stroke='currentColor'
+                   className='-mt-0.5 size-6 text-green-700'
+                  >
+                 <path
+                   strokeLinecap='round'
+                   strokeLinejoin='round'
+                   d='M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+                  />
+                </svg>
+
+                <div className='flex-1'>
+                 <strong className='block leading-tight font-medium text-green-800'>Login succesful!</strong>
+                <span className='block text-xs text-green-500 mt-0.5'>Redirecting to dashboard...</span>
+               </div>
+              </div>
+             </div>
+         )}
+
              {/*Redux error */}
-             {error && (<div className='rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200'>{error}</div>)}
-             {form.formState.errors.root && (<div className='rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200'>{form.formState.errors.root.message}</div>)}
+             {error && !showSuccess && (<div className='rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200'>{error}</div>)}
+             {form.formState.errors.root && !showSuccess && (<div className='rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200'>{form.formState.errors.root.message}</div>)}
 
              {/* connection error if submit attempted and still loading */}
-             {submitAttempted && loading && (<div className='rounded-md bg-blue-50 p-3 text-sm text-blue-600 border border-blue-200'>Attempting to connect to server...</div>)}
+             {submitAttempted && loading && !showSuccess && (<div className='rounded-md bg-blue-50 p-3 text-sm text-blue-600 border border-blue-200'>Attempting to connect to server...</div>)}
             
              <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
                <label className='block space-y-2'>
                  <span className='text-sm font-medium'>Email Address</span>
-                 <Input type='email' placeholder='name@email.com' autoComplete='email' className='rounded-md' {...form.register('email')} disabled={loading} />
+                 <Input type='email' placeholder='name@email.com' autoComplete='email' className='rounded-md' {...form.register('email')} disabled={loading || showSuccess} />
                  <span className='text-sm text-red-500'>{form.formState.errors.email?.message}</span>
               </label>
               
                <label className='block space-y-2'>
                  <span className='text-sm font-medium'>Password</span>
-                 <Input type='password' placeholder='Enter password' className='rounded-md' {...form.register('password')} disabled={loading}/>
+                 <Input type='password' placeholder='Enter password' className='rounded-md' {...form.register('password')} disabled={loading || showSuccess}/>
                  <span className='text-sm text-red-500'>{form.formState.errors.password?.message}</span>
                </label>
                 
@@ -153,13 +180,20 @@ export const Login = () => {
                   <Link to='/forgot-password' className='font-medium text-blue-600 hover:underline'>   Forgot password?</Link>
                 </p>
 
-               <Button type='submit' className='w-full rounded-md' disabled={loading}>{loading ? (
-                <span className='flex items-center justify-center gap-2'>
+               <Button type='submit' className='w-full rounded-md' disabled={loading || showSuccess}>{loading ? (
+                 <span className='flex items-center justify-center gap-2'>
                   <span className='h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent' />Logging in...
-                   </span>
-                     ) : ( 
-                    'Login'
-                    )}
+                 </span>
+                 ) : showSuccess ? (
+                <span className='flex items-center justify-center gap-2'>
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                  Success!
+                 </span>
+                 ) : (
+                  'Login'
+                  )}
                 </Button>
                </form>
              

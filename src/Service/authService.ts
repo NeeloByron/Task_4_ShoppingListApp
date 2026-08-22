@@ -1,7 +1,11 @@
+import CryptoJS from 'crypto-js'
 import type { User, RegisterData, LoginCredentials } from "@/Redux/authTypes";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+const hashPassword = (password: string): string => {
+    return CryptoJS.SHA256(password).toString();
+}
 export const authService = {
     async login(credentials: LoginCredentials): Promise<{ user: User; token: string }> {
         try {
@@ -13,11 +17,12 @@ export const authService = {
             }
 
             const users = await response.json();
+            const hashedInput = hashPassword(credentials.password)
 
             //find user by login credentials(email and password)
             const user = users.find((u: any) => 
                 u.email === credentials.email && 
-                u.password === credentials.password
+                u.password === hashedInput
             );
 
             if (!user) {
@@ -55,6 +60,8 @@ export const authService = {
             throw new Error('User with this email already exists');
          }
 
+         const hashedPassword = hashPassword(data.password)
+
           //create new user in json server
           const response = await fetch(`${API_URL}/users`, {
             method: 'POST',
@@ -66,7 +73,7 @@ export const authService = {
                     surname: data.surname,
                     email: data.email,
                     cellNumber: data.cellNumber,
-                    password: data.password,
+                    password: hashedPassword,
                     createdAt: new Date().toISOString()
                 }),
             });

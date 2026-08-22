@@ -1,31 +1,13 @@
 {
   "users": [
     {
-      "firstName": "Byron Neelo",
-      "lastName": "Neelo",
+      "name": "Byron",
+      "surname": "Nkhuna",
       "email": "byronnkhuna@gmail.com",
-      "phoneNumber": 792985272,
-      "password": "298595968",
-      "createdAt": "2026-08-20T21:05:38.643Z",
-      "id": "6GEb32BqM1k"
-    },
-    {
-      "name": "tharollo",
-      "surname": "nkhuna",
-      "email": "neelobyron@outlook.com",
-      "cellNumber": 784145484,
-      "password": "87456321",
-      "createdAt": "2026-08-21T21:51:22.818Z",
-      "id": "jzkPXb1Ye1w"
-    },
-    {
-      "name": "fddgfdfg",
-      "surname": "dfggdgd",
-      "email": "me@gmail.com",
-      "cellNumber": 5185165206,
-      "password": "0792985272",
-      "createdAt": "2026-08-22T09:25:59.188Z",
-      "id": "P6gVuIvRjVU"
+      "cellNumber": 792985272,
+      "password": "68366458c398ed5bb26dcd336433c0218ca023bf75d5a5ad46bca2444d731340",
+      "createdAt": "2026-08-22T12:06:51.944Z",
+      "id": "gxvPpcSUztE"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
