@@ -1,4 +1,5 @@
 import CryptoJS from 'crypto-js'
+import axiosInstance from '@/api/axiosConfig';
 import type { User, RegisterData, LoginCredentials } from "@/Redux/authTypes";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -8,99 +9,50 @@ const hashPassword = (password: string): string => {
 }
 export const authService = {
     async login(credentials: LoginCredentials): Promise<{ user: User; token: string }> {
-        try {
-            //get all users from json-server
-            const response = await fetch(`${API_URL}/users`);
+        const response = await axiosInstance.get('/users');
+        const users = response.data;
+        const hashedInput = hashPassword(credentials.password)
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch users');
-            }
+        const user = users.find((u: any) =>
+          u.email === credentials.email && 
+          u.password === hashedInput
+        );
 
-            const users = await response.json();
-            const hashedInput = hashPassword(credentials.password)
-
-            //find user by login credentials(email and password)
-            const user = users.find((u: any) => 
-                u.email === credentials.email && 
-                u.password === hashedInput
-            );
-
-            if (!user) {
-                throw new Error('Invalid email or password');
-            }
-            
-            //mock token
-            const token = 'mock_jwt_token' + Date.now();
-
-            return {
-                user: user,
-                token: token
-            };
-            } catch (error) {
-            console.error('Login error:', error);
-            throw error;
+        if (!user) {
+            throw new Error ('Invalid email or password');
         }
+       const token = 'mock_jwt_token' + Date.now();
+
+       return { user, token}
     },
 
     async register(data: RegisterData): Promise<{ user: User; token: string }> {
-        try {
-            //checks if user exists
-        const Checkresponse = await fetch(`${API_URL}/users`);
+       const checkResponse = await axiosInstance.get('/users');
+       const users = checkResponse.data;
 
-        if (!Checkresponse.ok) {
-            throw new Error('Failed to check existing users');
-        }
+       const existingUser = users.find((u: any) => u.email.toLowerCase() === data.email.toLocaleLowerCase());
+       if (existingUser) {
+        throw new Error('User with this email already exists');
+       }
 
-        const users = await Checkresponse.json();
-        //does this email exists - case sensentive 
+       const hashedPassword = hashPassword(data.password);
+       const response = await axiosInstance.post('/users', {
+          name: data.name,
+          surname: data.surname,
+          email: data.email,
+          cellNumber: data.cellNumber,
+          password: hashedPassword,
+          createdAt: new Date().toISOString()
+       });
 
-        const exitingUser = users.find((u: any) => u.email.toLowerCase() === data.email.toLowerCase());
-        
-        if (exitingUser) {
-            throw new Error('User with this email already exists');
-         }
+       const newUser = response.data;
+       const token = 'mock_jwt_token_' + Date.now();
 
-         const hashedPassword = hashPassword(data.password)
-
-          //create new user in json server
-          const response = await fetch(`${API_URL}/users`, {
-            method: 'POST',
-            headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: data.name,
-                    surname: data.surname,
-                    email: data.email,
-                    cellNumber: data.cellNumber,
-                    password: hashedPassword,
-                    createdAt: new Date().toISOString()
-                }),
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || 'Registration failed');
-            }
-
-            const newUser = await response.json();
-            
-            //mock token
-            const token = 'mock_jwt_token_' + Date.now();
-
-            return {
-                user: newUser,
-                token: token
-            };
-        } catch (error) {
-            console.error('Registration error:', error);
-            throw error;
-        }
+       return { user: newUser, token}
     },
 
     async logout(_token: string): Promise<void> {
         // For json-server
-        console.log('User logged out');
         return Promise.resolve();
     },
 };

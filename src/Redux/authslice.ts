@@ -4,11 +4,13 @@ import type { User, AuthState} from "@/Redux/authTypes"
 import { loginUser, registerUser, logoutUser } from '@/Redux/authThunks';
 import { act } from "react";
 
+const storedUser = localStorage.getItem('user');
+const storedToken = localStorage.getItem('token');
 
 {/*initial state*/}
 const initialState: AuthState = {
-    user: null,
-    token: null,
+    user: storedUser ? JSON.parse(storedUser) : null,
+    token: storedToken || null,
     loading: false,
     error: null,
 };
@@ -23,10 +25,13 @@ export const authSlice = createSlice ({
         state.token = null;
         state.loading = false;
         state.error = null;
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
      },
       updateUser: (state, action: PayloadAction<Partial<User>>) => {
         if (state.user) {
          state.user = { ...state.user, ...action.payload };
+         localStorage.setItem('user', JSON.stringify(state.user));
         }
       },
        clearError: (state) => {
@@ -46,6 +51,8 @@ export const authSlice = createSlice ({
          state.user = action.payload.user;
          state.token = action.payload.token;
          state.error = null;
+         localStorage.setItem('user', JSON.stringify(action.payload.user));
+         localStorage.setItem('token', action.payload.token);
        })
 
        .addCase(loginUser.rejected, (state, action) => {
@@ -53,6 +60,8 @@ export const authSlice = createSlice ({
          state.error = action.payload as string;
          state.user = null;
          state.token = null;
+         localStorage.removeItem('user');
+         localStorage.removeItem('token');
        })
 
        .addCase(registerUser.pending, (state) => {
@@ -65,6 +74,8 @@ export const authSlice = createSlice ({
          state.user = action.payload.user;
          state.token = action.payload.token;
          state.error = null;
+         localStorage.setItem('user', JSON.stringify(action.payload.user));
+         localStorage.setItem('token', action.payload.token);
        })
 
        .addCase(registerUser.rejected, (state, action) => {
@@ -72,6 +83,8 @@ export const authSlice = createSlice ({
          state.error = action.payload as string;
          state.user = null;
          state.token = null;
+         localStorage.removeItem('user');
+         localStorage.removeItem('token');
        })
 
        .addCase(logoutUser.fulfilled, (state) => {
@@ -79,6 +92,8 @@ export const authSlice = createSlice ({
          state.token = null;
          state.loading = false;
          state.error = null;
+         localStorage.removeItem('user');
+         localStorage.removeItem('token');
        });
       },
   });
