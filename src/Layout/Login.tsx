@@ -20,7 +20,7 @@ type LoginFormData = z.infer<typeof loginSchema>
 export const Login = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [submitAttempted, setSubmitAttemped] = useState(false)
+  const [submitAttempted, setSubmitAttempted] = useState(false)
 
   //Redux store 
   const { loading, error, user, token } = useAppSelector((state) => state.auth)
@@ -72,11 +72,12 @@ export const Login = () => {
     useEffect(() => {
       if (user && token) {
         console.log('Login successful')
+        navigate('/dashboard')
       }
     }, [user, token, navigate])
 
     async function  onSubmit(values: LoginFormData) {
-      setSubmitAttemped(true)
+      setSubmitAttempted(true)
       try {
         const loginData = {
           email: values.email,
@@ -113,6 +114,7 @@ export const Login = () => {
                       errorMessage = errorMsg 
                       console.log('Using error as is')
                      }
+                form.setError('root', { message: errorMessage })
             }
           }
 
