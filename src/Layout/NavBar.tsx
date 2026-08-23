@@ -71,17 +71,17 @@ export const NavBar = () => {
                key={link.to}
                to={link.to}
                onClick={() => setMobileOpen(false)}
-               className='block text-sm font-medium text-gray-100 hover:text-gray-500'>
+               className='block text-sm font-medium text-black hover:text-gray-500'>
                {link.label}
              </Link>
             ))}
 
-           <div className='flex items-center gap-2 pt-2 text-sm text-gray-700'>
+           <div className='flex items-center gap-2 pt-2 text-sm text-black'>
              <User size={16} />
              <span>{user?.name} {user?.surname}</span>
            </div>
 
-           <Button onClick={handleLogout} className='w-full gap-2'>
+           <Button onClick={handleLogout} className='w-full gap-2 text-black'>
              <LogOut size={16} />
              Logout
            </Button>
