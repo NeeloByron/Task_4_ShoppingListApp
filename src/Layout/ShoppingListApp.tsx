@@ -5,6 +5,7 @@ import { PublicRoute } from '@/routes/PublicRoute'
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '@/Redux/store'
 import { logout } from '@/Redux/authslice'
+import Home from '@/Layout/Home'
 
 const DashboardPlaceholder = () => {
   const dispatch = useAppDispatch()
@@ -18,7 +19,7 @@ const DashboardPlaceholder = () => {
 
 return (
     <div className="p-8">
-      <p>Dashboard coming soon.</p>
+      <Home />
       <button
         onClick={handleLogout}
         className="mt-4 rounded-md bg-gray-800 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700"
