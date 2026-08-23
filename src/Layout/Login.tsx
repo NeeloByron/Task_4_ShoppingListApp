@@ -153,14 +153,15 @@ export const Login = () => {
                 <div className='flex-1'>
                  <strong className='block leading-tight font-medium text-green-800'>Login succesful!</strong>
                 <span className='block text-xs text-green-500 mt-0.5'>Redirecting to dashboard...</span>
+                </div>
                </div>
               </div>
-             </div>
          )}
 
-             {/*Redux error */}
-             {error && !showSuccess && (<div className='rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200'>{error}</div>)}
-             {form.formState.errors.root && !showSuccess && (<div className='rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200'>{form.formState.errors.root.message}</div>)}
+             
+             {form.formState.errors.root && (
+              <div className='rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200'>
+                {form.formState.errors.root.message}</div>)}
 
              {/* connection error if submit attempted and still loading */}
              {submitAttempted && loading && !showSuccess && (<div className='rounded-md bg-blue-50 p-3 text-sm text-blue-600 border border-blue-200'>Attempting to connect to server...</div>)}

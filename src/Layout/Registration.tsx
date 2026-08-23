@@ -7,14 +7,18 @@ import { registerUser } from '@/Redux/authThunks'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react'
+import axiosInstance from '@/api/axiosConfig'
 
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   surname: z.string().min(2, "Surname must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
-  cellNumber: z.string().min(10, "Cell number must be at least 10 digits"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  cellNumber: z.string().regex(/^\d+$/,"Cell number must contain only digits").min(10, "Cell number must be at least 10 digits"),
+  password: z.string().min(8, "Password must be at least 8 characters")
+            .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+            .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+            .regex(/[0-9]/, "Password must contain at least one number"),
   confirmPassword: z.string().min(8, "Please confirm your password"),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
@@ -61,6 +65,48 @@ export const Register = () => {
     },
     defaultValues: { name: "", surname: "", email: "", cellNumber: "", password: "", confirmPassword: "" },
   })
+
+//email must contain characters numbers and and 1 uppercase character
+const [checkingEmail, setCheckingEmail] = useState(false)
+const emailCheckTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+const emailValue = form.watch('email')
+
+useEffect(() => {
+  if (emailCheckTimer.current) {
+    clearTimeout(emailCheckTimer.current)
+  }
+
+  const parsed = z.string().email().safeParse(emailValue)
+  if (!parsed.success) {
+    return
+  }
+
+ emailCheckTimer.current = setTimeout(async () => {
+  setCheckingEmail(true) 
+  try {
+     const response = await axiosInstance.get('/users')
+     const exists = response.data.some (
+      (u: any) => u.email.toLowerCase() === emailValue.toLowerCase()
+     )
+     if (exists) {
+     form.setError('email', {type: 'manual', message: 'This email is already registered'})
+     } else if (form.formState.errors.email?.type === 'manual') {
+      form.clearErrors('email')
+     }
+    } catch {
+      
+    } finally {
+      setCheckingEmail(false)
+    }
+  }, 600)
+
+  return () => {
+    if (emailCheckTimer.current) {
+      clearTimeout(emailCheckTimer.current)
+    }
+  }
+}, [emailValue])
 
   //clear redux errors when users type
   useEffect(() => {
@@ -177,20 +223,13 @@ export const Register = () => {
             <div className='flex-1'>
              <strong className='block leading-tight font-medium text-green-800'>Account created successfully!</strong>
              <span className='block text-xs text-green-500 mt-0.5'>Redirecting to dashboard...</span>
+             </div>
             </div>
-           </div>
-         </div>
-       )}
-
-           {/* Redux error*/}
-          {error && (
-          <div className='rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200'>
-            {error}
           </div>
-        )}
+         )}
 
         {/* Display form root error */}
-        {form.formState.errors.root && (
+        {form.formState.errors.root && !showSuccess && (
           <div className='rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200'>
             {form.formState.errors.root.message}
           </div>
@@ -241,12 +280,13 @@ export const Register = () => {
             <label className='block space-y-2'>
               <span className='text-sm font-medium'>Email Address</span>
               <Input type='email' placeholder='name@email.com' className='rounded-md' {...form.register('email')} disabled={loading || showSuccess} />
+              {checkingEmail && <span className='text-xs text-gray-400'>Checking availability...</span>}
               <span className='text-sm text-red-500'>{form.formState.errors.email?.message}</span>
             </label>
 
             <label className='block space-y-2'>
               <span className='text-sm font-medium'>Cell Number</span>
-              <Input type='tel' placeholder='082 123 4567' className='rounded-md' {...form.register('cellNumber')} disabled={loading || showSuccess} />
+              <Input type='tel' inputMode='numeric' maxLength={15} placeholder='082 123 4567' className='rounded-md' {...form.register('cellNumber')} disabled={loading || showSuccess} />
               <span className="text-sm text-red-500">{form.formState.errors.cellNumber?.message}</span>
             </label>
 
