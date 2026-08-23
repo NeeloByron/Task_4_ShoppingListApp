@@ -5,6 +5,7 @@ import { Button } from '@base-ui/react/button'
 import { Input } from '@/components/ui/input'
 import { Plus, Search, Share2, Pencil, Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 type ShoppingList = {
     id: string;
@@ -13,7 +14,7 @@ type ShoppingList = {
     category: string;
 }
 
-{/*temporary still going to use shopping slice */}
+// Temporary: still going to use the shopping slice.
 const placeholderLists: ShoppingList[] = [
     { id: '1', name: 'Weekly groceries', itemCount: 12, category: 'Groceries'},
     { id: '2', name: 'Cleaning supplies', itemCount: 5, category: 'Household'},
@@ -72,39 +73,44 @@ export const Home = () => {
             </select>
          </div>
 
-         {/* list cards */}
-         <div className='grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'>
-          {filteredLists.map((list) =>(
-            <div key={list.id} className='rounded-xl border bg-white p-4'>
-              <div className='flex items-start justify-between'>
-               <p className='font-medium'>{list.name}</p>
-               <button aria-label={`Share ${list.name}`}>
-                <Share2 size={16} className='text-gray-400 hover:text-gray-600' />
-               </button>
+          {/* empty state */}
+          {filteredLists.length === 0 ? (
+            <EmptyState
+               title='No item found'
+               description={`Nothing matches "${search}". Try a different search term`} />
+          ) : (
+            <>
+              {/* list cards */}
+              <div className='grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'>
+                {filteredLists.map((list) =>(
+                  <div key={list.id} className='rounded-xl border bg-white p-4'>
+                    <div className='flex items-start justify-between'>
+                      <p className='font-medium'>{list.name}</p>
+                      <button aria-label={`Share ${list.name}`}>
+                        <Share2 size={16} className='text-gray-400 hover:text-gray-600' />
+                      </button>
+                    </div>
+                    <p className='mb-2.5 mt-1.5 text-sm text-gray-500'>{list.itemCount} items</p>
+                    <span className={`rounded-full px-2.5 py-1 text-xs ${categoryStyles[list.category] || 'bg-gray-100 text-gray-700'}`}>
+                      {list.category}
+                    </span>
+                    <div className='mt-3.5 flex justify-end gap-2.5'>
+                      <button aria-label={`Edit ${list.name}`}>
+                        <Pencil size={19} className='text-gray-500 hover:text-gray-700' />
+                      </button>
+                      <button aria-label={`Delete ${list.name}`}>
+                        <Trash2 size={19} className='text-red-500 hover:text-red-600' />
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <p className='mb-2.5 mt-1.5 text-sm text-gray-500'>{list.itemCount} items</p>
-              <span className={`rounded-full px-2.5 py-1 text-xs ${categoryStyles[list.category] || 'bg-gray-100 text-gray-700'}`}>
-                {list.category}
-              </span>
-              <div className='mt-3.5 flex justify-end gap-2.5'>
-                <button aria-label={`Edit ${list.name}`}>
-                  <Pencil size={19} className='text-gray-500 hover:text-gray-700' />
-                </button>
-                <button aria-label={`Delete ${list.name}`}>
-                  <Trash2 size={19} className='text-red-500 hover:text-red-600' />
-               </button>
-            </div>
-            </div>
-          ))}
-         </div>
-         
-         {filteredLists.length === 0 && (
-          <p className='col-span-full py-8 text-center text-sm text-gray-500'>No list match "{search}".</p>
-         )}
-         <p className='text-sm text-gray-500'>{filteredLists.length}</p>
+              <p className='text-sm text-gray-500'>{filteredLists.length} lists</p>
+            </>
+          )}
       </div>
-    </>
-  )
-}
+     </>
+    )
+ }
 
 export default Home
