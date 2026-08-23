@@ -46,7 +46,7 @@ export const NavBar = () => {
         {/* Desktop user info + logout */}
         <div className='hidden items-center gap-4 md:flex'>
           <div className='flex items-center gap-2 text-sm text-gray-100 hover:text-gray-500'>
-            <User size={16} />
+            <User size={18} />
             <span>{user?.name} {user?.surname}</span>
           </div>
           <Button onClick={handleLogout} className='gap-2 text-gray-100 hover:text-gray-500'>
