@@ -69,10 +69,41 @@ export const Home = () => {
             <select value={sort}
                     onChange={(e) => setSort(e.target.value)}
                     className='w-40 rounded-md border border-gray-200 bg-white px-3 text-sm text-gray-700'>
+              <option value='date'>Sort by: Date added</option>
+              <option value='date'>Sort by: Name</option>
+              <option value='date'>Sort by: Category</option>
+            </select>
+         </div>
 
-                    </select>
+         {/* list cards */}
+         <div className='grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'>
+          {filteredLists.map((list) =>(
+            <div key={list.id} className='rounded-xl border-2 bg-white p-4 shadow-sm'>
+              <div className='flex items-start justify-between'>
+               <p className='font-medium'>{list.name}</p>
+               <button aria-label={`Share ${list.name}`}>
+                <Share2 size={16} className='text-gray-400 hover:text-gray-600' />
+               </button>
+              </div>
+              <p className='mb-2.5 mt-1.5 text-sm text-gray-500'>{list.itemCount} items</p>
+              <span className={`rounded-full px-2.5 py-1 text-xs ${categoryStyles[list.category] || 'bg-gray-100 text-gray-700'}`}>
+                {list.category}
+              </span>
+              <div className='mt-3.5 flex justify-end gap-2.5'>
+                <button aria-label={`Edit ${list.name}`}>
+                  <Pencil size={16} className='text-gray-500 hover:text-gray-700' />
+                </button>
+                <button aria-label={`Delete ${list.name}`}>
+                  <Trash2 size={16} className='text-red-500 hover:text-red-600' />
+               </button>
+            </div>
+            </div>
+          ))}
          </div>
          
+         {filteredLists.length === 0 && (
+          <p className='col-span-full py-8 text-center text-sm text-gray-500'>No list match "{search}".</p>
+         )}
       </div>
     </>
   )
