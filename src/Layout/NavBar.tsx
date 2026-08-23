@@ -28,7 +28,7 @@ export const NavBar = () => {
          <nav className='border-b bg-black'>
           <div className='mx-auto flex max-w-6xl items-center justify-between px-4 py-3'>
            <Link to='/dashboard' className='text-lg font-bold tracking-tight text-gray-100 hover:text-gray-500'>
-             ShopList
+             ShoppingAppList
            </Link>
 
           {/* Desktop links */}
