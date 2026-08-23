@@ -46,11 +46,8 @@ export const Home = () => {
       <div className='mx-auto max-w-6xl space-y-8 px-4 py-8'>
         {/* Header */}
          <div className='flex items-center justify-between'>
-            <div>
-                <p className='text-lg font-medium'>My shopping lists</p>
-                <p className='text-sm text-gray-500'>{filteredLists.length}</p>
-            </div>
-            <Button onClick={() => navigate('/lists/new')} className='flex gap-2'>
+           
+            <Button onClick={() => navigate('/lists/new')} className='flex items-center gap-2'>
                 <Plus size={16} />
                 New list
             </Button>
@@ -78,7 +75,7 @@ export const Home = () => {
          {/* list cards */}
          <div className='grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'>
           {filteredLists.map((list) =>(
-            <div key={list.id} className='rounded-xl border-2 bg-white p-4 shadow-sm'>
+            <div key={list.id} className='rounded-xl border bg-white p-4'>
               <div className='flex items-start justify-between'>
                <p className='font-medium'>{list.name}</p>
                <button aria-label={`Share ${list.name}`}>
@@ -91,10 +88,10 @@ export const Home = () => {
               </span>
               <div className='mt-3.5 flex justify-end gap-2.5'>
                 <button aria-label={`Edit ${list.name}`}>
-                  <Pencil size={16} className='text-gray-500 hover:text-gray-700' />
+                  <Pencil size={19} className='text-gray-500 hover:text-gray-700' />
                 </button>
                 <button aria-label={`Delete ${list.name}`}>
-                  <Trash2 size={16} className='text-red-500 hover:text-red-600' />
+                  <Trash2 size={19} className='text-red-500 hover:text-red-600' />
                </button>
             </div>
             </div>
@@ -104,6 +101,7 @@ export const Home = () => {
          {filteredLists.length === 0 && (
           <p className='col-span-full py-8 text-center text-sm text-gray-500'>No list match "{search}".</p>
          )}
+         <p className='text-sm text-gray-500'>{filteredLists.length}</p>
       </div>
     </>
   )

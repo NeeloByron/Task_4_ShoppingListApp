@@ -56,10 +56,10 @@ export const NavBar = () => {
 
          {/* Mobile hamburger */}
          <button
-           className='md:hidden'
+           className='md:hidden text-gray-100'
             onClick={() => setMobileOpen((prev) => !prev)}
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}>
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileOpen ? <X size={24} className=' text-gray-100' /> : <Menu size={24} />}
           </button>
         </div>
 
