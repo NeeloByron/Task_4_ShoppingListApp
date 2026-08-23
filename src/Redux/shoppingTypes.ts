@@ -19,5 +19,13 @@ export interface ShoppingList {
 export interface ShoppingListInput {
     name: string;
     category: string;
-    
+    notes?: string;
+    image?: string;
+    items: Omit<Shoppingitem, 'id'>[];
+}
+
+export interface ShoppingState {
+    lists: ShoppingList[];
+    loading: boolean;
+    error: string | null;
 }
