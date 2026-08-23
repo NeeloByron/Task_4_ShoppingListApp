@@ -16,17 +16,8 @@ const DashboardPlaceholder = () => {
     navigate('/login')
   }
 
-
 return (
-    <div className="p-8">
       <Home />
-      <button
-        onClick={handleLogout}
-        className="mt-4 rounded-md bg-gray-800 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700"
-      >
-        Log out
-      </button>
-    </div>
   )
 }
 
