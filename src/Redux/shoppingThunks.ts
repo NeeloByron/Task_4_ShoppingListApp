@@ -33,7 +33,7 @@ export const addList = createAsyncThunk(
 
 export const updatelist = createAsyncThunk(
     'shopping/updateList',
-    async ({ id, data }: { id: String; data: ShoppingListInput}, { rejectWithValue }) => {
+    async ({ id, data }: { id: string; data: ShoppingListInput}, { rejectWithValue }) => {
         try {
             return await shoppingService.updateList(id, data);
         } catch (error: any) {
