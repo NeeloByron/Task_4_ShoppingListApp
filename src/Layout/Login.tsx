@@ -7,7 +7,7 @@ import * as z from 'zod'
 import { useAppDispatch, useAppSelector } from '@/Redux/store'
 import { loginUser } from '@/Redux/authThunks'
 import { useEffect, useRef, useState } from 'react'
-import { Eye, EyeOff } from 'lucide-react'
+import { DivideIcon, Eye, EyeOff } from 'lucide-react'
 
 // Zod schema login validation
 const loginSchema = z.object({
@@ -121,13 +121,12 @@ export const Login = () => {
 
   return (
    <>
-      <div className='flex min-h-screen items-center justify-center bg-gray-50 p-4'>
+      <div className='flex min-h-screen items-center justify-center bg-gray-50 p-4'>          
         {/*create user side*/}
         <div className='w-full max-w-md space-y-6 rounded-xl border bg-white p-8 shadow-sm'>
           <div className='space-y-2 text-center'>
            {/* <UserIcon size={50} color="#000000" duration={1} /> */}
             <h1 className='text-2xl font-bold tracking-tight'>Login</h1>
-             <p className='text-sm text-gray-500'>Login to your list</p>
              </div>
 
               {/*Success message notification*/}

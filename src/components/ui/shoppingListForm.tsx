@@ -39,7 +39,7 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
     const [imagePreview, setImagePreview] = useState<string>('')
 
     const form = useForm<ListFormData>({
-    resolver: zodResolver(listSchema),
+     resolver: zodResolver(listSchema),
       defaultValues: {
       name: '',
       category: '',
@@ -50,8 +50,40 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
     })
 
     const { fields, append, remove } = useFieldArray({
-        control: 
+        control: form.control,
+        name: 'items',
     })
+
+    useEffect(() => {
+      if (initialData) {
+      form.reset({
+        name: initialData?.name,
+        category: initialData?.category,
+        notes: initialData?.notes || '',
+        image: initialData?.image || '',
+        items: initialData?.items.length
+          ? initialData.items.map((i) => ({ name: i.name, quantity: i.quantity, checked: i.checked }))
+          : [{ name: '', quantity: 1, checked: false }],
+      })
+      setImagePreview(initialData?.image || '')
+    } else {
+      form.reset({
+        name: '',
+        category: '',
+        notes: '',
+        image: '',
+        items: [{ name: '', quantity: 1, checked: false }],
+      })
+      setImagePreview('')
+     }
+    }, [initialData, open])
+
+    const handleFormSubmit = (values: ListFormData) => {
+      onSubmit(values as ShoppingListInput)
+    }
+
+    if (!open) return null
+
   return (
          <>
          </>
