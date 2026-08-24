@@ -28,5 +28,5 @@
       "id": "EadVJBcE3Do"
     }
   ],
-  "$schema": "./node_modules/json-server/schema.json"
+  "list":[]
 }
