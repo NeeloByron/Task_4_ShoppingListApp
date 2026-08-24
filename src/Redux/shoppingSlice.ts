@@ -70,5 +70,8 @@ export const shoppingSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload as string;
             });
-    }
-})
+    },
+});
+
+export default shoppingSlice.reducer;
+export const { clearShoppingError } = shoppingSlice.actions
