@@ -109,7 +109,7 @@ export const Login = () => {
                      lowerMsg.includes('fetch') ||
                      lowerMsg.includes('connection') ||
                      lowerMsg.includes('failed to fetch')) {
-                     errorMessage = 'Cannot connect to server. Make sure json-server is running on port 5000'
+                     errorMessage = 'Service are not avaible'
                      }
                      else if (errorMsg) {
                       errorMessage = errorMsg 
