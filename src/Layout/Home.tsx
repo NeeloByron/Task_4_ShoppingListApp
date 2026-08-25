@@ -7,7 +7,7 @@ import { Search, Share2, Pencil, Trash2, CheckCircle2 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { confirmationModal as ConfirmationModal } from '@/components/ui/confirmationModal'
-import { fetchLists, addList, updatelist, deleteList } from '@/Redux/shoppingThunks'
+import { fetchLists, addList, updateList, deleteList } from '@/Redux/shoppingThunks'
 import type { ShoppingListInput, ShoppingList } from '@/Redux/shoppingTypes'
 import { shoppingListForm as ShoppingListForm } from '@/components/ui/shoppingListForm'
 
@@ -63,12 +63,14 @@ export const Home = () => {
     const handleFormSubmit = async (data: ShoppingListInput) => {
       try {
         if (editingList) {
-          await dispatch(updatelist({ id: editingList.id, data})).unwrap()
-          setSuccessMessage('List updated')
+          await dispatch(updateList({ id: editingList.id, data})).unwrap()
+          setSuccessMessage('List updated successfully!')
         } else {
           await dispatch(addList(data)).unwrap()
-          setSuccessMessage('List created')
+          setSuccessMessage('List created created successfully!')
         }
+        setFormOpen(false)
+        setEditingList(null)
       } catch {
         }
       }
@@ -99,10 +101,9 @@ export const Home = () => {
 
        {/* Header */}
       <div className='flex items-center justify-between'>
-         <p className='text-lg font-medium'>My lists</p>
-          {/* <p className='text-sm text-gray-500'>{lists.length} lists</p> */}
+        {/* <p className='text-lg font-medium'>My lists</p> */}
+           {/*  <p className='text-sm text-gray-500'>{lists.length} lists</p> */}
           <Button onClick={openAddForm} className='flex items-center bg-black'>
-            
             New list
           </Button>
       </div>

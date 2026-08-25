@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { ShoppingState } from '@/Redux/shoppingTypes'
-import { fetchLists, addList, updatelist, deleteList } from '@/Redux/shoppingThunks'
+import { fetchLists, addList, updateList, deleteList } from '@/Redux/shoppingThunks'
 
 const initialState: ShoppingState = {
     lists: [],
@@ -43,18 +43,18 @@ export const shoppingSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload as string;
             })
-            .addCase(updatelist.pending, (state) => {
+            .addCase(updateList.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(updatelist.fulfilled, (state, action) => {
+            .addCase(updateList.fulfilled, (state, action) => {
                 state.loading = false;
                 const index = state.lists.findIndex((l) => l.id === action.payload.id);
                 if (index !== -1) {
                     state.lists[index] = action.payload;
                 }
             })
-            .addCase(updatelist.rejected, (state, action) => {
+            .addCase(updateList.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
             })

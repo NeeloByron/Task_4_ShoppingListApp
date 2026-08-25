@@ -8,7 +8,7 @@ type confirmationModalProps = {
     loading?: boolean
 }
 
-export const confirmationModal = ({ open, title, description, confirmLabel, onConfirm, onCancel, loading }: confirmationModalProps) => { 
+export const confirmationModal = ({ open, title, description, confirmLabel = 'Delete', onConfirm, onCancel, loading }: confirmationModalProps) => { 
     if (!open) return null
   return (
        <>
@@ -19,7 +19,7 @@ export const confirmationModal = ({ open, title, description, confirmLabel, onCo
                <div className='mt-6 flex justify-end gap-2'>
                 <button 
                        type='button'
-                       onClick={onConfirm}
+                       onClick={onCancel}
                        disabled={loading}
                        className='rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-60'>
                         Cancel
