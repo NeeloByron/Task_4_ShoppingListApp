@@ -7,7 +7,7 @@ import * as z from 'zod'
 import { useAppDispatch, useAppSelector } from '@/Redux/store'
 import { loginUser } from '@/Redux/authThunks'
 import { useEffect, useRef, useState } from 'react'
-import { Eye, EyeOff } from 'lucide-react'
+import { DivideIcon, Eye, EyeOff } from 'lucide-react'
 
 // Zod schema login validation
 const loginSchema = z.object({
@@ -109,7 +109,7 @@ export const Login = () => {
                      lowerMsg.includes('fetch') ||
                      lowerMsg.includes('connection') ||
                      lowerMsg.includes('failed to fetch')) {
-                     errorMessage = 'Cannot connect to server. Make sure json-server is running on port 5000'
+                     errorMessage = 'Service are not avaible'
                      }
                      else if (errorMsg) {
                       errorMessage = errorMsg 
@@ -121,13 +121,12 @@ export const Login = () => {
 
   return (
    <>
-      <div className='flex min-h-screen items-center justify-center bg-gray-50 p-4'>
+      <div className='flex min-h-screen items-center justify-center bg-gray-50 p-4'>          
         {/*create user side*/}
         <div className='w-full max-w-md space-y-6 rounded-xl border bg-white p-8 shadow-sm'>
           <div className='space-y-2 text-center'>
-            <UserIcon size={50} color="#000000" duration={1} />
+           {/* <UserIcon size={50} color="#000000" duration={1} /> */}
             <h1 className='text-2xl font-bold tracking-tight'>Login</h1>
-             <p className='text-sm text-gray-500'>Login to your list</p>
              </div>
 
               {/*Success message notification*/}
@@ -181,17 +180,16 @@ export const Login = () => {
                      type='button'
                      onClick={() => setShowPassword((prev) => !prev)}
                      className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700'
-                     tabIndex={-1}
-                    >
+                     tabIndex={-1}>
                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                    </button>
                   </div>
                  <span className='text-sm text-red-500'>{form.formState.errors.password?.message}</span>
                </label>
                 
-                <p className='text-end text-sm text-gray-600'>
+               {/* <p className='text-end text-sm text-gray-600'>
                   <Link to='/forgot-password' className='font-medium text-blue-600 hover:underline'>   Forgot password?</Link>
-                </p>
+                </p> */}
 
                <Button type='submit' className='w-full rounded-md' disabled={loading || showSuccess}>{loading ? (
                  <span className='flex items-center justify-center gap-2'>
