@@ -1,16 +1,16 @@
 import NavBar from '@/Layout/NavBar'
 import { useNavigate } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '@/Redux/store'
-import { Button } from '@base-ui/react/button'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Plus, Search, Share2, Pencil, Trash2, CheckCircle2 } from 'lucide-react'
+import { Search, Share2, Pencil, Trash2, CheckCircle2 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { confirmationModal as ConfirmationModal } from '@/components/ui/confirmationModal'
 import { fetchLists, addList, updatelist, deleteList } from '@/Redux/shoppingThunks'
 import type { ShoppingListInput, ShoppingList } from '@/Redux/shoppingTypes'
 import { shoppingListForm as ShoppingListForm } from '@/components/ui/shoppingListForm'
-import { tr } from 'zod/v4/locales'
+
 
 const categoryStyles: Record<string, string> = {
     Groceries: 'bg-teal-50 text-teal-800',
@@ -101,8 +101,8 @@ export const Home = () => {
       <div className='flex items-center justify-between'>
          <p className='text-lg font-medium'>My lists</p>
           {/* <p className='text-sm text-gray-500'>{lists.length} lists</p> */}
-          <Button onClick={openAddForm} className='flex items-center gap-2'>
-            <Plus size={16} />
+          <Button onClick={openAddForm} className='flex items-center bg-black'>
+            
             New list
           </Button>
       </div>

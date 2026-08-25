@@ -187,9 +187,9 @@ export const Login = () => {
                  <span className='text-sm text-red-500'>{form.formState.errors.password?.message}</span>
                </label>
                 
-                <p className='text-end text-sm text-gray-600'>
+               {/* <p className='text-end text-sm text-gray-600'>
                   <Link to='/forgot-password' className='font-medium text-blue-600 hover:underline'>   Forgot password?</Link>
-                </p>
+                </p> */}
 
                <Button type='submit' className='w-full rounded-md' disabled={loading || showSuccess}>{loading ? (
                  <span className='flex items-center justify-center gap-2'>

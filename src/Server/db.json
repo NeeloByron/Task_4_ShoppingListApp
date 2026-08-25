@@ -26,7 +26,17 @@
       "password": "878ad9afa89afcb3ac776530280056d8484570fe6c70d6f1ba1462638a1e1a90",
       "createdAt": "2026-08-22T19:59:09.713Z",
       "id": "EadVJBcE3Do"
+    },
+    {
+      "name": "test",
+      "surname": "steal",
+      "email": "test@gmail.com",
+      "cellNumber": 792985272,
+      "password": "88c10c463f1ca36c7f672e937321a342224d92c9f151dd93bc8d4a500b067933",
+      "createdAt": "2026-08-25T07:07:28.411Z",
+      "id": "4vGDA5AMhzY"
     }
   ],
-  "list":[]
+  "list": [],
+  "$schema": "./node_modules/json-server/schema.json"
 }
