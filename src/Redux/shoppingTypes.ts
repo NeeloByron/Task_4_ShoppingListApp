@@ -29,3 +29,11 @@ export interface ShoppingState {
     loading: boolean;
     error: string | null;
 }
+
+export interface ShoppingItem {
+    id: string;
+    name: string;
+    quantity: number;
+    checked: boolean;
+    image?: string;
+}
