@@ -1,6 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/db.json", "destination": "/db.json" },
-    { "source": "/((?!api|db).*)", "destination": "/index.html" }
-  ]
-}
