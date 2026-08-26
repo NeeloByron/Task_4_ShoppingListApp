@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js'
 import axiosInstance from '@/api/axiosConfig';
-import type { User, RegisterData, LoginCredentials } from "@/Redux/authTypes";
+import type { User, RegisterData, LoginCredentials, updateProfileData, ChangePasswordData } from "@/Redux/authTypes";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 

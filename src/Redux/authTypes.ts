@@ -26,3 +26,15 @@ export interface RegisterData {
     surname: string;
     cellNumber: string | number;
 }
+
+export interface updateProfileData {
+    name: string;
+    surname: string;
+    email: string;
+    cellNumber: string | number;
+}
+
+export interface ChangePasswordData {
+    currentPassword: string;
+    newPassword: string;
+}
