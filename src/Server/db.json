@@ -121,43 +121,20 @@
     },
     {
       "userId": "EadVJBcE3Do",
-      "name": "fhjfgh",
-      "category": "Household",
-      "notes": "fghgfh",
+      "name": "dinner",
+      "category": "Groceries",
+      "notes": "for this week",
       "image": "",
       "items": [
         {
-          "name": "fgh",
+          "name": "rice",
           "quantity": 2,
           "checked": false,
-          "id": "1787724203258-0"
+          "id": "1787737804557-0"
         }
       ],
-      "createdAt": "2026-08-26T06:03:23.258Z",
-      "id": "R2vSfhAqUYY"
-    },
-    {
-      "userId": "EadVJBcE3Do",
-      "name": "erte",
-      "category": "Groceries",
-      "notes": "ert",
-      "image": "",
-      "items": [
-        {
-          "name": "ert",
-          "quantity": 1,
-          "checked": false,
-          "id": "1787724241594-0"
-        },
-        {
-          "name": "erte",
-          "quantity": 1,
-          "checked": false,
-          "id": "1787724241594-1"
-        }
-      ],
-      "createdAt": "2026-08-26T06:04:01.594Z",
-      "id": "TmTsny_OO-s"
+      "createdAt": "2026-08-26T09:12:57.070Z",
+      "id": "3u9cdonhxeg"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
