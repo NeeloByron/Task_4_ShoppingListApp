@@ -99,7 +99,9 @@ export const Home = () => {
         </div>
       )}
 
-       {/* Header */}
+      {/* search & sort */}
+      <div className='flex gap-2'>
+         {/* Header */}
       <div className='flex items-center justify-between'>
         {/* <p className='text-lg font-medium'>My lists</p> */}
            {/*  <p className='text-sm text-gray-500'>{lists.length} lists</p> */}
@@ -107,9 +109,6 @@ export const Home = () => {
             New list
           </Button>
       </div>
-
-      {/* search & sort */}
-      <div className='flex gap-2'>
        <div className='relative flex-1'>
          <Search size={20} className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
          <Input type='text'

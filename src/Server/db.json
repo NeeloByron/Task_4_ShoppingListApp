@@ -121,7 +121,7 @@
     },
     {
       "userId": "EadVJBcE3Do",
-      "name": "dinner",
+      "name": "Dinner",
       "category": "Groceries",
       "notes": "for this week",
       "image": "",
@@ -130,7 +130,7 @@
           "name": "rice",
           "quantity": 2,
           "checked": false,
-          "id": "1787737804557-0"
+          "id": "1787768678445-0"
         }
       ],
       "createdAt": "2026-08-26T09:12:57.070Z",

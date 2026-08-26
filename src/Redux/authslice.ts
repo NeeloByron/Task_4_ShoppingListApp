@@ -1,8 +1,8 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from '@reduxjs/toolkit';
 import type { User, AuthState} from "@/Redux/authTypes"
-import { loginUser, registerUser, logoutUser } from '@/Redux/authThunks';
-import { act } from "react";
+import { loginUser, registerUser, logoutUser, updateProfile, changePassword } from '@/Redux/authThunks';
+
 
 const storedUser = localStorage.getItem('user');
 const storedToken = localStorage.getItem('token');
@@ -94,6 +94,36 @@ export const authSlice = createSlice ({
          state.error = null;
          localStorage.removeItem('user');
          localStorage.removeItem('token');
+       })
+
+       .addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+       })
+
+       .addCase(updateProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        localStorage.setItem('user', JSON.stringify(action.payload));
+       })
+
+       .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+       })
+
+       .addCase(changePassword.pending, (state) => {
+         state.loading = true;
+         state.error = null;
+       })
+
+       .addCase(changePassword.fulfilled, (state) => {
+         state.loading = false;
+       })
+
+       .addCase(changePassword.rejected, (state, action) => {
+         state.loading = false;
+         state.error = action.payload as string;
        });
       },
   });
