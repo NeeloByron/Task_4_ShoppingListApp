@@ -31,7 +31,7 @@ export const NavBar = () => {
              ShoppingAppList
            </Link>
 
-          {/* Desktop links 
+          {/* Desktop links */}
            <div className='hidden items-center gap-6 md:flex'>
            {navLinks.map((link) => (
              <Link
@@ -41,7 +41,7 @@ export const NavBar = () => {
                {link.label}
              </Link>
            ))}
-         </div>*/}
+         </div> 
 
         {/* Desktop user info + logout */}
         <div className='hidden items-center gap-4 md:flex'>

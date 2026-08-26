@@ -7,10 +7,11 @@ import { Eye, EyeOff, CheckCircle2 } from 'lucide-react'
 import { useAppDispatch, useAppSelector } from '@/Redux/store'
 import { updateProfile,changePassword } from '@/Redux/authThunks'
 import { useState } from 'react'
+import { NavBar } from '@/Layout/NavBar'
 
 const profileSchema = z.object({
     name: z.string().min(2, 'Name must be atleast 2 characters'),
-    surname: z.string().min(2, 'Surname must be atleast 2 characters');
+    surname: z.string().min(2, 'Surname must be atleast 2 characters'),
     email: z.string().email('Please enter a valid email address'),
     cellNumber: z.string().regex(/^\d+$/, 'Cell number must contain only digits').min(10, 'Cell number must be atleast 10 digits')
 })
@@ -83,6 +84,7 @@ export const Profile = () => {
     }
   return (
       <>
+        <NavBar />
         <div className='mx-auto max-w-2xl space-y-8 px-4 py-8'>
             <div>
                 <h1 className='text-2xl font-bold tracking-tight'>Profile</h1>
