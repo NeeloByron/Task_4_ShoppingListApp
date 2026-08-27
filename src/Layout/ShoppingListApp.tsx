@@ -2,24 +2,11 @@ import { Register } from '@/Layout/Registration'
 import { Login } from '@/Layout/Login'
 import { ProtectedRoute } from '@/routes/ProtectedRoute'
 import { PublicRoute } from '@/routes/PublicRoute'
-import { Route, Routes, Navigate, useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '@/Redux/store'
-import { logout } from '@/Redux/authslice'
+import { Route, Routes, Navigate} from 'react-router-dom'
 import Home from '@/Layout/Home'
+import { Profile } from '@/Layout/Profile'
+import { SharedList } from '@/Layout/sharedList'
 
-const DashboardPlaceholder = () => {
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-
-  const handleLogout = () => {
-    dispatch(logout())
-    navigate('/login')
-  }
-
-return (
-      <Home />
-  )
-}
 
 export const ShoppingListApp = () => {
 
@@ -27,17 +14,21 @@ export const ShoppingListApp = () => {
     <>
      <Routes>
        <Route path='/' element={<Navigate to='/login' replace />} />
-      {/*Public route*/}
+
+      <Route path='/shared/:id' element={<SharedList />} />
+      {/* Public route */}
       <Route element={<PublicRoute />}> 
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
       </Route>
-
+      
+      {/* Private route */}
       <Route element={<ProtectedRoute />}>
-        <Route path='/dashboard' element={<DashboardPlaceholder />} />
+         <Route path='/dashboard' element={<Home />} />
+         <Route path='/profile' element={<Profile />} />
       </Route>
 
-      <Route path='/*' element={<Navigate to='login' replace />} />
+      <Route path='/*' element={<Navigate to='/login' replace />} />
      </Routes>
     </>
   )

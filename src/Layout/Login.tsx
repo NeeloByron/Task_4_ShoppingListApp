@@ -2,12 +2,11 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useNavigate, Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { UserIcon } from "@animateicons/react/lucide";
 import * as z from 'zod'
 import { useAppDispatch, useAppSelector } from '@/Redux/store'
 import { loginUser } from '@/Redux/authThunks'
 import { useEffect, useRef, useState } from 'react'
-import { DivideIcon, Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 
 // Zod schema login validation
 const loginSchema = z.object({

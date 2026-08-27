@@ -1,10 +1,10 @@
 {
   "users": [
     {
-      "name": "Bright",
+      "name": "Brighton",
       "surname": "Bruce",
       "email": "brighton@gmail.com",
-      "cellNumber": 792985272,
+      "cellNumber": "0792985272",
       "password": "878ad9afa89afcb3ac776530280056d8484570fe6c70d6f1ba1462638a1e1a90",
       "createdAt": "2026-08-22T19:59:09.713Z",
       "id": "EadVJBcE3Do"
@@ -121,43 +121,37 @@
     },
     {
       "userId": "EadVJBcE3Do",
-      "name": "fhjfgh",
-      "category": "Household",
-      "notes": "fghgfh",
+      "name": "Dinner",
+      "category": "Groceries",
+      "notes": "for this week",
       "image": "",
       "items": [
         {
-          "name": "fgh",
+          "name": "rice",
           "quantity": 2,
           "checked": false,
-          "id": "1787724203258-0"
+          "id": "1787855914688-0"
         }
       ],
-      "createdAt": "2026-08-26T06:03:23.258Z",
-      "id": "R2vSfhAqUYY"
+      "createdAt": "2026-08-26T09:12:57.070Z",
+      "id": "3u9cdonhxeg"
     },
     {
       "userId": "EadVJBcE3Do",
-      "name": "erte",
-      "category": "Groceries",
-      "notes": "ert",
+      "name": "fwec",
+      "category": "Electronics",
+      "notes": "3qDC ",
       "image": "",
       "items": [
         {
-          "name": "ert",
+          "name": "WEFC",
           "quantity": 1,
           "checked": false,
-          "id": "1787724241594-0"
-        },
-        {
-          "name": "erte",
-          "quantity": 1,
-          "checked": false,
-          "id": "1787724241594-1"
+          "id": "1787819145260-0"
         }
       ],
-      "createdAt": "2026-08-26T06:04:01.594Z",
-      "id": "TmTsny_OO-s"
+      "createdAt": "2026-08-27T08:25:45.260Z",
+      "id": "vrqnefS9NIE"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

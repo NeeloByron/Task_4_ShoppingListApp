@@ -21,7 +21,7 @@ export const confirmationModal = ({ open, title, description, confirmLabel = 'De
                        type='button'
                        onClick={onCancel}
                        disabled={loading}
-                       className='rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-60'>
+                       className='rounded-md border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 disabled:opacity-60'>
                         Cancel
                </button>
                <button 

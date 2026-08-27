@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button' 
-import { X, Plus, Trash2, ImagePlus } from 'lucide-react'
+import { X, Plus, Trash2, ImagePlus, Loader2, Search } from 'lucide-react'
 import type { ShoppingList, ShoppingListInput } from '@/Redux/shoppingTypes'
+import { imageApi, useGetImagesQuery } from '@/api/imageApi'
 
 const CATEGORIES = ['Groceries', 'Household', 'Events', 'Electronics', 'Other']
 
@@ -33,10 +34,16 @@ type ShoppingListFormProps = {
   loading?: boolean
 }
 
-
-
 export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loading }: ShoppingListFormProps) => {
     const [imagePreview, setImagePreview] = useState<string>('')
+    const [searchTerm, setSearchTerm] = useState<string>('')
+    const [triggerSearch, setTriggerSearch] = useState<string>('')
+    const [showSearchGrid, setShowSearchGrid] = useState<boolean>(false)
+
+    //RTK query
+    const { data: searchData, isFetching: isSearching } = useGetImagesQuery(triggerSearch, {
+      skip: !triggerSearch, 
+    })
 
     const form = useForm<ListFormData>({
      resolver: zodResolver(listSchema),
@@ -76,6 +83,10 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
       })
       setImagePreview('')
      }
+        //reset
+       setSearchTerm('')
+       setTriggerSearch('')
+       setShowSearchGrid(false)
     }, [initialData, open])
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,6 +100,22 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
         form.setValue('image', image)
       }
       reader.readAsDataURL(file)
+    }
+
+    //Trigger API call
+    const handleWebSearch = (e: React.MouseEvent) => {
+      e.preventDefault()
+      if (searchTerm.trim()) {
+        setTriggerSearch(searchTerm)
+        setShowSearchGrid(true)
+      }
+    }
+
+    // select image and press URL to react hook
+    const handleSelectWebImage = (url: string) => {
+      setImagePreview(url)
+      form.setValue('image', url)
+      setShowSearchGrid(false)
     }
 
     const handleFormSubmit = (values: ListFormData) => {
@@ -139,19 +166,56 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
             />
           </label>
 
-          <label className='block space-y-2'>
-            <span className='text-sm font-medium'>Image (optional)</span>
-            <div className='flex items-center gap-3'>
-              {imagePreview ? (
-                <img src={imagePreview} alt='List preview' className='h-16 w-16 rounded-md object-cover' />
-              ) : (
-                <div className='flex h-16 w-16 items-center justify-center rounded-md border border-dashed border-gray-300'>
-                  <ImagePlus size={20} className='text-gray-400' />
+          <div className='block space-y-2'>
+            <span className='text-sm font-medium'>List Cover Image (optional)</span>
+            <div className='flex items-start gap-3'>
+              
+              
+              <div className="flex-1 space-y-2"> 
+                {/* Web Search Input Bar */}
+                <div className="flex items-center gap-1">
+                  <Input 
+                    type="text" 
+                    placeholder="Or search web (e.g. fruit)" 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="h-8 text-xs" 
+                    disabled={loading}
+                  />
+                  <Button 
+                    type="button" 
+                    onClick={handleWebSearch} 
+                    disabled={loading || !searchTerm.trim()} 
+                    className="h-8 px-2"
+                  >
+                    {isSearching ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
+                  </Button>
                 </div>
-              )}
-              <input type='file' accept='image/*' onChange={handleImageChange} disabled={loading} className='text-sm' />
+              </div>
             </div>
-          </label>
+
+            {/* Interactive Search Result Dropdown Grid */}
+            {showSearchGrid && searchData?.results && (
+              <div className="mt-2 p-2 border border-gray-200 rounded-lg max-h-40 overflow-y-auto bg-gray-50">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-xs font-semibold text-gray-500">Select web photo:</span>
+                  <button type="button" onClick={() => setShowSearchGrid(false)} className="text-xs text-gray-400 hover:text-gray-600">hide</button>
+                </div>
+                <div className="grid grid-cols-4 gap-2">
+                  {searchData.results.map((img: any) => (
+                    <button
+                      key={img.id}
+                      type="button"
+                      onClick={() => handleSelectWebImage(img.urls.small)}
+                      className="relative h-12 w-full rounded border overflow-hidden hover:opacity-80 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <img src={img.urls.thumb} alt={img.alt_description} className="h-full w-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
           <div className='space-y-2'>
             <div className='flex items-center justify-between'>

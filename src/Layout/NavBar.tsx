@@ -27,9 +27,9 @@ export const NavBar = () => {
         <>
          <nav className='border-b bg-black'>
           <div className='mx-auto flex max-w-6xl items-center justify-between px-4 py-3'>
-           <Link to='/dashboard' className='text-lg font-bold tracking-tight text-gray-100 hover:text-gray-500'>
+           <div className='text-lg font-bold tracking-tight text-gray-100 hover:text-gray-500'>
              ShoppingAppList
-           </Link>
+           </div>
 
           {/* Desktop links 
            <div className='hidden items-center gap-6 md:flex'>
@@ -41,14 +41,14 @@ export const NavBar = () => {
                {link.label}
              </Link>
            ))}
-         </div>*/}
+         </div> */}
 
         {/* Desktop user info + logout */}
         <div className='hidden items-center gap-4 md:flex'>
-          <div className='flex items-center gap-2 text-sm text-gray-100 hover:text-gray-500'>
+          <Link to='/profile' className='flex items-center gap-2 text-sm text-gray-100 hover:text-gray-500'>
             <User size={18} />
-            <span>{user?.name} {user?.surname}</span>
-          </div>
+             <span>{user?.name} {user?.surname}</span>
+           </Link>
           <Button onClick={handleLogout} className='gap-2 text-gray-100 hover:text-gray-500'>
             Logout
           </Button>
