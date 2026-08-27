@@ -3,11 +3,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Eye, EyeOff, CheckCircle2 } from 'lucide-react'
+import { Eye, EyeOff, CheckCircle2, X } from 'lucide-react'
 import { useAppDispatch, useAppSelector } from '@/Redux/store'
 import { updateProfile,changePassword } from '@/Redux/authThunks'
 import { useState } from 'react'
 import { NavBar } from '@/Layout/NavBar'
+import { Link } from 'react-router-dom'
 
 const profileSchema = z.object({
     name: z.string().min(2, 'Name must be atleast 2 characters'),
@@ -86,11 +87,19 @@ export const Profile = () => {
       <>
         <NavBar />
         <div className='mx-auto max-w-2xl space-y-8 px-4 py-8'>
-            <div>
+            <div className='flex items-center justify-between'>
+                <div>
                 <h1 className='text-2xl font-bold tracking-tight'>Profile</h1>
                 <p className='text-sm text-gray-500'>View and update your account details</p>
+                </div>
+                <div>
+                <Link to='/dashboard' className='flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 transition-colors'
+                     aria-label='Close and return to dashboard'>
+                     <X size={24} />     
+            </Link> 
             </div>
-
+            </div>
+         
             {/*Profile information and edit form */}
             <div className='rounded-xl border bg-white p-6 shadow-sm'>
                 <h2 className='mb-4 font-semibold'>Personal information</h2>
@@ -136,7 +145,7 @@ export const Profile = () => {
                         <span className='text-sm text-red-500'>{profileForm.formState.errors.cellNumber?.message}</span>
                     </label>
 
-                    <Button type='submit' disabled={loading}>
+                    <Button type='submit' className='flex items-center rounded-md bg-black' disabled={loading}>
                         {loading ? 'Saving...' : 'Save changes'}
                     </Button>
                 </div>
@@ -189,7 +198,7 @@ export const Profile = () => {
                      <span className='text-sm text-red-500'>{passwordForm.formState.errors.confirmPassword?.message}</span>
                    </label>
 
-                   <Button type='submit' disabled={loading}>
+                   <Button type='submit' className='flex items-center rounded-md bg-black' disabled={loading}>
                     {loading ? 'Updating...' : 'Update password'}
                    </Button>
                 </form>

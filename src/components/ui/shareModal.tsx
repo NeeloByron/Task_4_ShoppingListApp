@@ -46,7 +46,7 @@ export const shareModal = ( {open, listName, shareUrl, onClose }: shareModalProp
                     className='flex-1 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-600' />
              <button type='button'
                      onClick={handleCopy}
-                     className='flex items-center gap-1 rounded-md border border-gray-300 px-3 py-2 text-sm font-medium hover:bg-gray-50'>
+                     className='flex items-center bg-black gap-1 rounded-md border border-gray-300 px-3 py-2 text-sm text-white font-medium hover:bg-gray-900'>
                         {copied ? <Check size={16} className='text-green-600' /> : <Copy size={16} />}
                         {copied ? 'Copied' : 'Copy'}
             </button>
@@ -56,7 +56,7 @@ export const shareModal = ( {open, listName, shareUrl, onClose }: shareModalProp
            <div className='flex gap-2'>
              <a
                href={emailHref}
-               className='flex flex-1 items-center justify-center gap-2 rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50'
+               className='flex flex-1 items-center justify-center gap-2  rounded-md border border-black px-3 py-2 text-sm hover:bg-gray-50'
              >
                <Mail size={16} />
                Email
@@ -65,7 +65,7 @@ export const shareModal = ( {open, listName, shareUrl, onClose }: shareModalProp
                href={whatsappHref}
                target='_blank'
                rel='noopener noreferrer'
-               className='flex flex-1 items-center justify-center gap-2 rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50'
+               className='flex flex-1 items-center justify-center gap-2 rounded-md border border-black px-3 py-2 text-sm hover:bg-gray-50'
              >
                WhatsApp
              </a>
@@ -73,7 +73,7 @@ export const shareModal = ( {open, listName, shareUrl, onClose }: shareModalProp
                href={twitterHref}
                target='_blank'
                rel='noopener noreferrer'
-               className='flex flex-1 items-center justify-center gap-2 rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50'
+               className='flex flex-1 items-center justify-center gap-2 rounded-md border border-black px-3 py-2 text-sm hover:bg-gray-50'
              >
                X
              </a>
