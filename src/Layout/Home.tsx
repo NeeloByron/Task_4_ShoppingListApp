@@ -85,7 +85,6 @@ export const Home = () => {
         }
       }
 
-
   return (
     <>
       <NavBar />
@@ -102,13 +101,6 @@ export const Home = () => {
       {/* search & sort */}
       <div className='flex gap-2'>
          {/* Header */}
-      <div className='flex items-center justify-between'>
-        {/* <p className='text-lg font-medium'>My lists</p> */}
-           {/*  <p className='text-sm text-gray-500'>{lists.length} lists</p> */}
-          <Button onClick={openAddForm} className='flex items-center bg-black'>
-            New list
-          </Button>
-      </div>
        <div className='relative flex-1'>
          <Search size={20} className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
          <Input type='text'
@@ -124,8 +116,16 @@ export const Home = () => {
                  <option value='category'>Sort by: Category</option>
                  <option value='date'>Sort by: Date added</option>
                 </select>
+
+      <div className='flex items-center justify-between'>
+        {/* <p className='text-lg font-medium'>My lists</p> */}
+           {/*  <p className='text-sm text-gray-500'>{lists.length} lists</p> */}
+          <Button onClick={openAddForm} className='flex items-center rounded-md bg-black'>
+            New list
+          </Button>
       </div>
-       
+      </div>
+
        {/* empty state */}
       {lists.length === 0 && !loading ? (
         <EmptyState
@@ -182,7 +182,7 @@ export const Home = () => {
         loading={loading}
       />
     </div>
-    </>
+   </>
   )
 }
 

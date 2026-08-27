@@ -47,4 +47,10 @@ export const shoppingService ={
         await axiosInstance.delete(`/lists/${id}`);
         return id;
     },
+
+    async fetchListById(id: string): Promise<ShoppingList> {
+        const response = await axiosInstance.get(`/lists/${id}`);
+        return response.data
+    }
+
 };
