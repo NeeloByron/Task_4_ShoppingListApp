@@ -10,6 +10,7 @@ import { confirmationModal as ConfirmationModal } from '@/components/ui/confirma
 import { fetchLists, addList, updateList, deleteList } from '@/Redux/shoppingThunks'
 import type { ShoppingListInput, ShoppingList } from '@/Redux/shoppingTypes'
 import { shoppingListForm as ShoppingListForm } from '@/components/ui/shoppingListForm'
+import { shareModal as ShareModal } from '@/components/ui/shareModal'
 
 
 const categoryStyles: Record<string, string> = {
@@ -31,6 +32,7 @@ export const Home = () => {
   const [editingList, setEditingList] = useState<ShoppingList | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<ShoppingList | null>(null)
   const [successMessage, setSuccessMessage] = useState('')
+  const [shareTarget, setShareTarget] = useState<ShoppingList | null>(null)
 
   useEffect(() => {
     dispatch(fetchLists())
@@ -143,7 +145,7 @@ export const Home = () => {
                 <div key={list.id} className='rounded-xl border bg-white p-4'>
                   <div className='flex items-start justify-between'>
                     <p className='font-medium'>{list.name}</p>
-                    <button aria-label={`Share ${list.name}`}>
+                    <button aria-label={`Share ${list.name}`} onClick={() => setShareTarget(list)}>
                       <Share2 size={16} className='text-gray-400 hover:text-gray-600' />
                     </button>
                   </div>
@@ -163,7 +165,7 @@ export const Home = () => {
               ))}
             </div>
           )}
-
+  
       <ShoppingListForm
         open={formOpen}
         onClose={() => { setFormOpen(false); setEditingList(null) }}
@@ -181,6 +183,12 @@ export const Home = () => {
         onCancel={() => setDeleteTarget(null)}
         loading={loading}
       />
+
+      <ShareModal 
+         open={!!shareTarget}
+         listName={shareTarget?.name || ''}
+         shareUrl={shareTarget ? `${window.location.origin}/shared/${shareTarget}` : ''}
+         onClose={() => setShareTarget(null)} />
     </div>
    </>
   )

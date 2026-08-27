@@ -135,6 +135,40 @@
       ],
       "createdAt": "2026-08-26T09:12:57.070Z",
       "id": "3u9cdonhxeg"
+    },
+    {
+      "userId": "EadVJBcE3Do",
+      "name": "254tgrvf ",
+      "category": "Household",
+      "notes": "w4f c",
+      "image": "",
+      "items": [
+        {
+          "name": "we",
+          "quantity": 1,
+          "checked": false,
+          "id": "1787819132531-0"
+        }
+      ],
+      "createdAt": "2026-08-27T08:25:32.531Z",
+      "id": "oqw58oJNTCw"
+    },
+    {
+      "userId": "EadVJBcE3Do",
+      "name": "fwec",
+      "category": "Electronics",
+      "notes": "3qDC ",
+      "image": "",
+      "items": [
+        {
+          "name": "WEFC",
+          "quantity": 1,
+          "checked": false,
+          "id": "1787819145260-0"
+        }
+      ],
+      "createdAt": "2026-08-27T08:25:45.260Z",
+      "id": "vrqnefS9NIE"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
