@@ -147,7 +147,7 @@ export const Home = () => {
                 <div key={list.id} onClick={() => setViewList(list)} className='cursor-pointer rounded-xl border bg-white p-4 hover:border-gray-300'>
                   <div className='flex items-start justify-between'>
                     <p className='font-medium'>{list.name}</p>
-                    <button aria-label={`Share ${list.name}`} onClick={() => setShareTarget(list)}>
+                    <button aria-label={`Share ${list.name}`} onClick={(e) => { e.stopPropagation(); setShareTarget(list) }}>
                       <Share2 size={16} className='text-gray-400 hover:text-gray-600' />
                     </button>
                   </div>
@@ -189,7 +189,7 @@ export const Home = () => {
       <ShareModal 
          open={!!shareTarget}
          listName={shareTarget?.name || ''}
-         shareUrl={shareTarget ? `${window.location.origin}/shared/${shareTarget}` : ''}
+         shareUrl={shareTarget ? `${window.location.origin}/shared/${shareTarget.id}` : ''}
          onClose={() => setShareTarget(null)} />
 
       <ListDetailModal 
