@@ -11,14 +11,15 @@ import { fetchLists, addList, updateList, deleteList } from '@/Redux/shoppingThu
 import type { ShoppingListInput, ShoppingList } from '@/Redux/shoppingTypes'
 import { shoppingListForm as ShoppingListForm } from '@/components/ui/shoppingListForm'
 import { shareModal as ShareModal } from '@/components/ui/shareModal'
-import ListDetailModal from './ListDetailModal'
+import ListDetailModal from '@/Layout/ListDetailModal'
 
 
 const categoryStyles: Record<string, string> = {
     Groceries: 'bg-teal-50 text-teal-800',
-    Household: 'bg-teal-50 text-teal-800',
-    Events: 'bg-teal-50 text-teal-800',
-    Electronics: 'bg-teal-50 text-teal-800',
+    Household: 'bg-amber-50 text-amber-800',
+    Events: 'bg-pink-50 text-pink-800',
+    Electronics: 'bg-blue-50 text-blue-800',
+    others: 'bg-gray-100 text-gray-700',
 }
 
 export const Home = () => {
@@ -93,7 +94,7 @@ export const Home = () => {
     <>
       <NavBar />
 
-      <div className='mx-auto max-w-6xl space-y-8 px-4 py-8'>
+      <div className='mx-auto max-w-6xl space-y-8 px-4 py-10'>
        {/* success message */}
       {successMessage && (
         <div role='alert' className='flex items-center gap-2 rounded-md border border-green-500 bg-green-50 p-3 text-sm text-green-800'>
@@ -103,33 +104,28 @@ export const Home = () => {
       )}
 
       {/* search & sort */}
-      <div className='flex gap-2'>
+      <div className='flex flex-col gap-2 sm:flex-row'>
          {/* Header */}
        <div className='relative flex-1'>
          <Search size={20} className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
          <Input type='text'
                 placeholder='Search items'
-                className='rounded-md pl-9'
+                className='rounded-[8px] pl-9'
                 value={search}
                 onChange={(e) => setSearch(e.target.value)} />
        </div>
         <select value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className='w-40 rounded-md border border-gray-200 bg-white px-3 text-sm text-gray-700'>
+                className='w-full rounded-[8px] border border-gray-200 bg-white px-3 text-sm text-gray-700 sm:w-40'>
                  <option value='name'>Sort by: Name</option> 
                  <option value='category'>Sort by: Category</option>
                  <option value='date'>Sort by: Date added</option>
                 </select>
-
-      <div className='flex items-center justify-between'>
-        {/* <p className='text-lg font-medium'>My lists</p> */}
-           {/*  <p className='text-sm text-gray-500'>{lists.length} lists</p> */}
-          <Button onClick={openAddForm} className='flex items-center rounded-md bg-black'>
+          <Button onClick={openAddForm} className='flex w-full items-center justify-center rounded-[8px] bg-[#0A0A0A] hover:bg-gray-800 sm:w-auto'>
             New list
           </Button>
       </div>
-      </div>
-
+      
        {/* empty state */}
       {lists.length === 0 && !loading ? (
         <EmptyState
