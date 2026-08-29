@@ -176,23 +176,6 @@
     },
     {
       "userId": "_BoPg7x0Klc",
-      "name": "jmn",
-      "category": "Household",
-      "notes": "",
-      "image": "https://images.unsplash.com/photo-1608270586620-248524c67de9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQzODg5fDB8MXxzZWFyY2h8Mnx8YmVlcnxlbnwwfHx8fDE3ODc5NzUxMTd8MA&ixlib=rb-4.1.0&q=80&w=400",
-      "items": [
-        {
-          "name": "beer",
-          "quantity": 1,
-          "checked": false,
-          "id": "1788023608158-0"
-        }
-      ],
-      "createdAt": "2026-08-29T17:13:28.158Z",
-      "id": "VRAU_LjR_1k"
-    },
-    {
-      "userId": "_BoPg7x0Klc",
       "name": "Food",
       "category": "Groceries",
       "notes": "Food the month",
@@ -241,6 +224,40 @@
       ],
       "createdAt": "2026-08-29T17:19:22.393Z",
       "id": "RdBdTAElHzU"
+    },
+    {
+      "userId": "_BoPg7x0Klc",
+      "name": "mn",
+      "category": "Events",
+      "notes": "",
+      "image": "",
+      "items": [
+        {
+          "name": "nmj",
+          "quantity": 1,
+          "checked": false,
+          "id": "1788029362046-0"
+        }
+      ],
+      "createdAt": "2026-08-29T18:34:00.003Z",
+      "id": "RzjAIIXful0"
+    },
+    {
+      "userId": "_BoPg7x0Klc",
+      "name": "wer",
+      "category": "Events",
+      "notes": "wer",
+      "image": "",
+      "items": [
+        {
+          "name": "wer",
+          "quantity": 1,
+          "checked": false,
+          "id": "1788029347554-0"
+        }
+      ],
+      "createdAt": "2026-08-29T18:49:07.554Z",
+      "id": "g34NzITM43E"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

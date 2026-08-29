@@ -5,6 +5,7 @@ import * as z from 'zod'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button' 
 import { X, Plus, Trash2, Loader2, Search } from 'lucide-react'
+import { toastManager } from '@/components/ui/toast'
 import type { ShoppingList, ShoppingListInput } from '@/Redux/shoppingTypes'
 import {  useGetImagesQuery } from '@/api/imageApi'
 
@@ -137,8 +138,21 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
       setShowSearchGrid(false)
     }
 
-    const handleFormSubmit = (values: ListFormData) => {
-      onSubmit(values as ShoppingListInput)
+    const handleFormSubmit = async (values: ListFormData) => {
+      try {
+       await onSubmit(values as ShoppingListInput)
+       toastManager.add({
+        title: initialData ? 'List Updated!' : 'List Created!',
+        description: initialData ? 'Your shopping list has been updated successfully' : 'Your new shopping list has been created',
+      })
+       onClose()
+      } catch (error) {
+       toastManager.add({
+        title: 'Something went wrong',
+        description: 'Failed to save your list. Please try again.',
+       })
+       console.error('Error saving list:', error)
+      }
     }
 
     if (!open) return null
