@@ -6,7 +6,7 @@ import * as z from 'zod'
 import { useAppDispatch, useAppSelector } from '@/Redux/store'
 import { loginUser } from '@/Redux/authThunks'
 import { useEffect, useRef, useState } from 'react'
-import { Eye, EyeOff } from 'lucide-react'
+import { CheckCircle2, Eye, EyeOff, ShoppingCart } from 'lucide-react'
 
 // Zod schema login validation
 const loginSchema = z.object({
@@ -120,50 +120,41 @@ export const Login = () => {
 
   return (
    <>
-      <div className='flex min-h-screen items-center justify-center bg-gray-50 p-4'>          
-        {/*create user side*/}
-        <div className='w-full max-w-md space-y-6 rounded-xl border bg-white p-8 shadow-sm'>
-          <div className='space-y-2 text-center'>
-           {/* <UserIcon size={50} color="#000000" duration={1} /> */}
-            <h1 className='text-2xl font-bold tracking-tight'>Login</h1>
+    <div className='flex min-h-screen'>
+      {/* left side of the form */}
+      <div className='flex w-full items-center justify-center bg-white px-6 py-12 lg:w-1/2'>          
+        {/* shopping cart icon */}
+        <div className='w-full max-w-sm space-y-6'>
+          <div className='flex h-10 w-10 items-center justify-center rounded-[10px] bg-black'>
+           <ShoppingCart size={22} className='text-white' />
+             </div>
+              
+              {/* header */}
+             <div className='space-y-1'>
+               <h1 className='text-[26px] font-medium tracking-tight text-gray-900'>Welcome back</h1>
+               <p className='text-sm text-gray-500'>Log in to manage your shopping lists.</p>
              </div>
 
               {/*Success message notification*/}
              {showSuccess && (
              <div role='alert' className='rounded-md border border-green-500 bg-green-50 p-4 shadow-sm'>
                <div className='flex items-start gap-4'>
-                 <svg
-                   aria-hidden='true'
-                   xmlns='http://www.w3.org/2000/svg'
-                   fill='none'
-                   viewBox='0 0 24 24'
-                   strokeWidth='1.5'
-                   stroke='currentColor'
-                   className='-mt-0.5 size-6 text-green-700'
-                  >
-                 <path
-                   strokeLinecap='round'
-                   strokeLinejoin='round'
-                   d='M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
-                  />
-                </svg>
-
+                <CheckCircle2 size={22} className='-mt-0.5 text-green-700' />
                 <div className='flex-1'>
                  <strong className='block leading-tight font-medium text-green-800'>Login succesful!</strong>
                 <span className='block text-xs text-green-500 mt-0.5'>Redirecting to dashboard...</span>
                 </div>
                </div>
               </div>
-         )}
-
-             
+             )}
+              
+              {/* connection error if submit attempted and still loading */}
              {form.formState.errors.root && (
               <div className='rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200'>
                 {form.formState.errors.root.message}</div>)}
-
-             {/* connection error if submit attempted and still loading */}
-             {submitAttempted && loading && !showSuccess && (<div className='rounded-md bg-blue-50 p-3 text-sm text-blue-600 border border-blue-200'>Attempting to connect to server...</div>)}
+              {submitAttempted && loading && !showSuccess && (<div className='rounded-md bg-blue-50 p-3 text-sm text-blue-600 border border-blue-200'>Attempting to connect to server...</div>)}
             
+             {/* login form */}
              <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
                <label className='block space-y-2'>
                  <span className='text-sm font-medium'>Email Address</span>
@@ -185,12 +176,18 @@ export const Login = () => {
                   </div>
                  <span className='text-sm text-red-500'>{form.formState.errors.password?.message}</span>
                </label>
-                
-               {/* <p className='text-end text-sm text-gray-600'>
-                  <Link to='/forgot-password' className='font-medium text-blue-600 hover:underline'>   Forgot password?</Link>
-                </p> */}
 
-               <Button type='submit' className='w-full rounded-md' disabled={loading || showSuccess}>{loading ? (
+               {/* remember me checkbox */}
+               <div className='flex items-center justify-between text-sm'>
+                <label className='flex items-center gap-2 text-gray-600'>
+                  <input type='checkbox'
+                         className='h-3.5 w-3.5 rounded border-gray-300' />
+                         Remember me
+                </label>
+               {/* <Link to='/forgot-password' className='text-gray-900 underline hover:text-gray-600'>Forgot password?</Link> */}
+               </div>
+
+               <Button type='submit' className='w-full rounded-[10px] bg-black hover:bg-gray-800' disabled={loading || showSuccess}>{loading ? (
                  <span className='flex items-center justify-center gap-2'>
                   <span className='h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent' />Logging in...
                  </span>
@@ -210,8 +207,27 @@ export const Login = () => {
              <p className='text-center text-sm text-gray-600'>No account?
                <Link to='/register' className='font-medium text-blue-600 hover:underline'>   Create an account</Link>      
              </p>
-       </div>
-     </div>
+          </div>
+        </div>
+
+        {/* Right side of the form  illustration panel*/}
+        <div className='relative hidden overflow-hidden bg-[#0A0A0A] lg:block lg:w-1/2'>
+         <svg width='100%' height='100%' viewBox='0 0 400 480' className='absolute inset-0' preserveAspectRatio='xMidYMid slice'>
+          <rect x='0' y='0' width='400' height='480' fill='#0A0A0A' />
+          <circle cx='80' cy='90' r='70' fill='#FFFFFF' opacity='0.06' />
+          <circle cx='320' cy='60' r='40' fill='#FFFFFF' opacity='0.08' />
+          <polygon points='200,130 240,190 160,190' fill='#FFFFFF' opacity='0.9' />
+          <polygon points='200,170 240,230 160,230' fill='#FFFFFF' opacity='0.35' />
+          <rect x='60' y='260' width='90' height='90' fill='none' stroke='#FFFFFF' strokeWidth='1' opacity='0.5' transform='rotate(15 105 305)' />
+          <circle cx='300' cy='300' r='28' fill='none' stroke='#FFFFFF' strokeWidth='1' opacity='0.6' />
+          <circle cx='300' cy='300' r='14' fill='#FFFFFF' opacity='0.9' />
+          <path d='M330 350 L334 362 L346 366 L334 370 L330 382 L326 370 L314 366 L326 362 Z' fill='#FFFFFF' opacity='0.85' />
+          <circle cx='90' cy='420' r='3' fill='#FFFFFF' opacity='0.5' />
+          <circle cx='110' cy='440' r='2' fill='#FFFFFF' opacity='0.4' />
+          <circle cx='70' cy='440' r='2' fill='#FFFFFF' opacity='0.4' />
+        </svg>
+        </div>
+      </div>
    </>
   )
 }
