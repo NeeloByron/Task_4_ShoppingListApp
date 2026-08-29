@@ -121,37 +121,26 @@
     },
     {
       "userId": "EadVJBcE3Do",
-      "name": "Dinner",
-      "category": "Groceries",
-      "notes": "for this week",
-      "image": "",
+      "name": "Party",
+      "category": "Events",
+      "notes": "A party for me",
+      "image": "https://images.unsplash.com/photo-1550850395-c17a8e90ad0a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQzODg5fDB8MXxzZWFyY2h8MXx8YmFsbG9uc3xlbnwwfHx8fDE3ODc5NjY4MzR8MA&ixlib=rb-4.1.0&q=80&w=400",
       "items": [
         {
-          "name": "rice",
-          "quantity": 2,
-          "checked": false,
-          "id": "1787855914688-0"
-        }
-      ],
-      "createdAt": "2026-08-26T09:12:57.070Z",
-      "id": "3u9cdonhxeg"
-    },
-    {
-      "userId": "EadVJBcE3Do",
-      "name": "fwec",
-      "category": "Electronics",
-      "notes": "3qDC ",
-      "image": "",
-      "items": [
-        {
-          "name": "WEFC",
+          "name": "Alcohol",
           "quantity": 1,
           "checked": false,
-          "id": "1787819145260-0"
+          "id": "1787966856192-0"
+        },
+        {
+          "name": "Meat",
+          "quantity": 1,
+          "checked": false,
+          "id": "1787966856192-1"
         }
       ],
-      "createdAt": "2026-08-27T08:25:45.260Z",
-      "id": "vrqnefS9NIE"
+      "createdAt": "2026-08-29T01:27:36.192Z",
+      "id": "AzfGYiRHuz4"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
