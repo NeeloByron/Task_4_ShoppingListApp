@@ -11,7 +11,8 @@ import { fetchLists, addList, updateList, deleteList } from '@/Redux/shoppingThu
 import type { ShoppingListInput, ShoppingList } from '@/Redux/shoppingTypes'
 import { shoppingListForm as ShoppingListForm } from '@/components/ui/shoppingListForm'
 import { shareModal as ShareModal } from '@/components/ui/shareModal'
-import { ListDetailModal } from '@/Layout/ListDetailModal'
+import ListDetailModal from './ListDetailModal'
+
 
 const categoryStyles: Record<string, string> = {
     Groceries: 'bg-teal-50 text-teal-800',
@@ -33,7 +34,7 @@ export const Home = () => {
   const [deleteTarget, setDeleteTarget] = useState<ShoppingList | null>(null)
   const [successMessage, setSuccessMessage] = useState('')
   const [shareTarget, setShareTarget] = useState<ShoppingList | null>(null)
-  const [viewingList, setViewingList] = useState<ShoppingList | null>(null)
+  const [viewingList, setViewList] = useState<ShoppingList | null>(null)
 
   useEffect(() => {
     dispatch(fetchLists())
@@ -143,7 +144,7 @@ export const Home = () => {
           ) : (
             <div className='grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'>
               {filteredLists.map((list) => (
-                <div key={list.id}  onClick={() => setViewingList(list)} className='cursor-pointer rounded-xl border bg-white p-4 hover:border-gray-300'>
+                <div key={list.id} onClick={() => setViewList(list)} className='cursor-pointer rounded-xl border bg-white p-4 hover:border-gray-300'>
                   <div className='flex items-start justify-between'>
                     <p className='font-medium'>{list.name}</p>
                     <button aria-label={`Share ${list.name}`} onClick={() => setShareTarget(list)}>
@@ -155,10 +156,10 @@ export const Home = () => {
                     {list.category}
                   </span>
                   <div className='mt-3.5 flex justify-end gap-2.5'>
-                    <button aria-label={`Edit ${list.name}`} onClick={() => openEditForm(list)}>
+                    <button aria-label={`Edit ${list.name}`} onClick={(e) =>  { e.stopPropagation(); openEditForm(list)} }>
                       <Pencil size={19} className='text-gray-500 hover:text-gray-700' />
                     </button>
-                    <button aria-label={`Delete ${list.name}`} onClick={() => setDeleteTarget(list)}>
+                    <button aria-label={`Delete ${list.name}`} onClick={(e) => { e.stopPropagation(); setDeleteTarget(list)} }>
                       <Trash2 size={19} className='text-red-500 hover:text-red-600' />
                     </button>
                   </div>
@@ -191,15 +192,14 @@ export const Home = () => {
          shareUrl={shareTarget ? `${window.location.origin}/shared/${shareTarget}` : ''}
          onClose={() => setShareTarget(null)} />
 
-      <ListDetailModal
-          open={!!viewingList}
-          list={viewingList}
-          onClose={() => setViewingList(null)}
-          onEdit={(list) => {
-          setViewingList(null)
-          openEditForm(list)
-        }}
-      />
+      <ListDetailModal 
+                open={!!viewingList}
+                list={viewingList}
+                onClose={() => setViewList(null)}
+                onEdit={(list) => {
+                  setViewList(null)
+                  openEditForm(list)
+                }} />
     </div>
    </>
   )

@@ -168,15 +168,24 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
 
           <div className='block space-y-2'>
             <span className='text-sm font-medium'>List Cover Image (optional)</span>
-            <div className='flex items-start gap-3'>
-              
-              
-              <div className="flex-1 space-y-2"> 
+            
+            {/* Image view */}
+            {imagePreview && (
+             <div className='flex items-start gap-3'>  
+              <img src={imagePreview} alt='selected cover' className='h-16 w-16 rounded-md object-cover' />
+                <Button type='button'
+                        onClick={() => {setImagePreview(''); form.setValue('image', '') }}
+                        className='text-xs text-red-500 hover:underline'>
+                        Remove
+                   </Button>
+                 </div>
+                )}
+
                 {/* Web Search Input Bar */}
                 <div className="flex items-center gap-1">
                   <Input 
                     type="text" 
-                    placeholder="Or search web (e.g. fruit)" 
+                    placeholder="Or Unsplash (e.g. fruit)" 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="h-8 text-xs" 
@@ -190,15 +199,13 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
                   >
                     {isSearching ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
                   </Button>
-                </div>
-              </div>
-            </div>
+               </div>
 
             {/* Interactive Search Result Dropdown Grid */}
             {showSearchGrid && searchData?.results && (
               <div className="mt-2 p-2 border border-gray-200 rounded-lg max-h-40 overflow-y-auto bg-gray-50">
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs font-semibold text-gray-500">Select web photo:</span>
+                  <span className="text-xs font-semibold text-gray-500">Select a photo:</span>
                   <button type="button" onClick={() => setShowSearchGrid(false)} className="text-xs text-gray-400 hover:text-gray-600">hide</button>
                 </div>
                 <div className="grid grid-cols-4 gap-2">
@@ -207,13 +214,16 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
                       key={img.id}
                       type="button"
                       onClick={() => handleSelectWebImage(img.urls.small)}
-                      className="relative h-12 w-full rounded border overflow-hidden hover:opacity-80 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
+                      className="relative h-12 w-full rounded border overflow-hidden hover:opacity-80 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500">
                       <img src={img.urls.thumb} alt={img.alt_description} className="h-full w-full object-cover" />
                     </button>
                   ))}
                 </div>
               </div>
+            )}
+
+            {showSearchGrid && !isSearching && searchData?.results?.length === 0 && (
+              <p className='mt-2 text-xs text-gray-400'>No results for "{searchTerm}". Try another term.</p>
             )}
           </div>
 
