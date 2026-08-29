@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector} from "@/Redux/store"
 import { registerUser } from '@/Redux/authThunks'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, ShoppingCart, CheckCircle2 } from 'lucide-react'
 import axiosInstance from '@/api/axiosConfig'
 
 
@@ -136,7 +136,6 @@ useEffect(() => {
 
       return () => {
         clearTimeout(timer)
-        console.log('Timer cleared')
       }
     }
   }, [user, token, navigate])
@@ -153,16 +152,11 @@ useEffect(() => {
         cellNumber: Number(values.cellNumber),
         password: values.password,
       }
-       
-      console.log('Submitting registration data:', registerData)
+
       //dispatch authThunk
        await dispatch(registerUser(registerData)).unwrap()
-       console.log('Registration dispatched successfully')
-
+       //Error from fetching data
     } catch (err: any) {
-      console.error('Registration failed - Full error object:', err)
-      console.error('Error Message:', err?.message)
-
       let errorMessage = 'Registration failed. Please try again.'
       
       const errorMsg = err?.message || String(err) || '';
@@ -173,18 +167,15 @@ useEffect(() => {
             lowerMsg.includes('user with this email') ||
             errorMsg.includes('email already')) {
             errorMessage = 'This email is already registered. Please use a different email or log in.'
-            console.log('Set "already exists" message')
         } 
         else if (lowerMsg.includes('network') || 
                  lowerMsg.includes('fetch') || 
                  lowerMsg.includes('connection') ||
                  lowerMsg.includes('failed to fetch')) {
-            errorMessage = 'Cannot connect to server. Make sure json-server is running on port 5000'
-            console.log('Set network error message')
+            errorMessage = 'Cannot connect to server. Make sure check to check services'
         } 
         else if (errorMsg) {
             errorMessage = errorMsg
-            console.log('Using error message as is')
         }
       form.setError('root', { message: errorMessage })
     }
@@ -192,37 +183,29 @@ useEffect(() => {
 
   return (
     <>
-       <div className='flex min-h-screen items-center justify-center bg-gray-50 p-4'>
-        {/*create user side*/}
-        <div className='w-full max-w-md space-y-6 rounded-xl border bg-white p-8 shadow-sm'>
-          <div className='space-y-2 text-center'>
-            <h1 className='text-2xl font-bold tracking-tight'>Create an account</h1>
-            <p className='text-sm text-gray-500'>Start organizing your shopping</p>
+     {/* page layout */}
+     <div className='flex min-h-screen'>
+      {/* left side of the form create user */}
+       <div className='flex min-h-screen items-center justify-center bg-white p-6 py-12 lg:w-1/2'>
+        <div className='w-full max-w-sm space-y-5'>
+          <div className='flex h-10 w-10 items-center justify-center rounded-[10px] bg-black'>
+            <ShoppingCart size={22} className='text-white' />
           </div>
-           
+
+           {/* header */}
+           <div className='space-y-1'>
+            <h1 className='text-2xl font-medium tracking-tight text-gray-900'>Create an account</h1>
+            <p className='text-sm text-gray-500'>Start organizing your shopping</p>
+           </div>
+
            {/*success notification */}
             {showSuccess && (
             <div role='alert' className='rounded-md border border-green-500 bg-green-50 p-4 shadow-sm'>
              <div className='flex items-start gap-4'>
-              <svg
-                aria-hidden='true'
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth='1.5'
-                stroke='currentColor'
-                className='-mt-0.5 size-6 text-green-700'
-                 >
-               <path
-               strokeLinecap='round'
-               strokeLinejoin='round'
-               d='M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
-               />
-             </svg>
-
-            <div className='flex-1'>
-             <strong className='block leading-tight font-medium text-green-800'>Account created successfully!</strong>
-             <span className='block text-xs text-green-500 mt-0.5'>Redirecting to dashboard...</span>
+               <CheckCircle2 size={22} className='-mt-0.5 text-green-700' />
+               <div className='flex-1'>
+              <strong className='block leading-tight font-medium text-green-800'>Account created successfully!</strong>
+              <span className='block text-xs text-green-500 mt-0.5'>Redirecting to dashboard...</span>
              </div>
             </div>
           </div>
@@ -237,61 +220,42 @@ useEffect(() => {
 
         {/* loading indicator */}
         {submitAttemped && loading && !showSuccess && (
-        <div className="inline-flex items-center gap-3" role="status">
-          <svg
-            className="size-6 animate-spin text-gray-600"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-           ></circle>
-
-            <path
-           className="opacity-75"
-           fill="currentColor"
-           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-           ></path>
-          </svg>
-         <p className="font-medium text-gray-700">Creating your account...</p>
-       </div>
+        <div className='flex items-center gap-3'>
+              <span className='h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-gray-700' />
+              <p className='text-sm text-gray-600'>Creating your account...</p>
+            </div>
         )}
 
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-             <label className='block space-y-2'>
-                <span className='text-sm font-medium'>Name</span>
-                <Input placeholder='First Name' className='rounded-md'{...form.register('name')} disabled={loading || showSuccess} />
+             <div className='flex gap-3'>
+             <label className='block flex-1 space-y-2'>
+                <span className='text-sm font-medium text-gray-900'>Name</span>
+                <Input placeholder='First Name' className='rounded-[10px]'{...form.register('name')} disabled={loading || showSuccess} />
                 <span className='text-sm text-red-500'>{form.formState.errors.name?.message}</span>
               </label>
               
-             <label className='block space-y-2'>
-                <span className='text-sm font-medium'>Surname</span>
-                <Input placeholder='Last Name' className='rounded-md' {...form.register('surname')} disabled={loading || showSuccess} />
+             <label className='block flex-1 space-y-2'>
+                <span className='text-sm font-medium text-gray-900'>Surname</span>
+                <Input placeholder='Last Name' className='rounded-[10px]' {...form.register('surname')} disabled={loading || showSuccess} />
                 <span className='text-sm text-red-500'>{form.formState.errors.surname?.message}</span>
               </label>
+              </div>
 
             <label className='block space-y-2'>
-              <span className='text-sm font-medium'>Email Address</span>
-              <Input type='email' placeholder='name@email.com' className='rounded-md' {...form.register('email')} disabled={loading || showSuccess} />
+              <span className='text-sm font-medium text-gray-900'>Email Address</span>
+              <Input type='email' placeholder='name@email.com' className='rounded-[10px]' {...form.register('email')} disabled={loading || showSuccess} />
               {checkingEmail && <span className='text-xs text-gray-400'>Checking availability...</span>}
               <span className='text-sm text-red-500'>{form.formState.errors.email?.message}</span>
             </label>
 
             <label className='block space-y-2'>
-              <span className='text-sm font-medium'>Cell Number</span>
-              <Input type='tel' inputMode='numeric' maxLength={15} placeholder='082 123 4567' className='rounded-md' {...form.register('cellNumber')} disabled={loading || showSuccess} />
+              <span className='text-sm font-medium text-gray-900'>Cell Number</span>
+              <Input type='tel' inputMode='numeric' maxLength={15} placeholder='082 123 4567' className='rounded-[10px]' {...form.register('cellNumber')} disabled={loading || showSuccess} />
               <span className="text-sm text-red-500">{form.formState.errors.cellNumber?.message}</span>
             </label>
 
             <label className='block space-y-2'>
-              <span className='text-sm font-medium'>Password</span>
+              <span className='text-sm font-medium text-gray-900'>Password</span>
               <div className='relative'>
                 <Input type={showPassword ? 'text' : 'password'} placeholder='Create a password' className='rounded-md pr-10' {...form.register('password')} disabled={loading || showSuccess}/>
                 <button
@@ -307,9 +271,9 @@ useEffect(() => {
             </label>
 
             <label className='block space-y-2'>
-             <span className='text-sm font-medium'>Confirm Password</span>
+             <span className='text-sm font-medium text-gray-900'>Confirm Password</span>
                <div className='relative'>
-                 <Input type={showConfirmPassword ? 'text' : 'password'} placeholder='Re-enter password' className='rounded-md pr-10' {...form.register('confirmPassword')} disabled={loading || showSuccess}/>
+                 <Input type={showConfirmPassword ? 'text' : 'password'} placeholder='Re-enter password' className='rounded-[10px] pr-10' {...form.register('confirmPassword')} disabled={loading || showSuccess}/>
                  <button
                    type='button'
                    onClick={() => setShowConfirmPassword((prev) => !prev)}
@@ -322,7 +286,7 @@ useEffect(() => {
               <span className='text-sm text-red-500'>{form.formState.errors.confirmPassword?.message}</span>
             </label>
 
-            <Button type='submit' className='w-full rounded-md' disabled={loading || showSuccess}>
+            <Button type='submit' className='w-full rounded-[10px] bg-black hover:bg-gray-800' disabled={loading || showSuccess}>
              {loading ? (
               <span className='flex items-center justify-center gap-2'>
                 <span className='h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent' />
@@ -342,13 +306,30 @@ useEffect(() => {
         </form>
 
          <p className='text-center text-sm text-gray-600'>Already have an account?
-            <Link to='/login' className='font-medium text-blue-600 hover:underline'>   Log in</Link>      
+            <Link to='/login' className='font-medium text-gray-900 hover:underline'>   Log in</Link>      
          </p>
       </div>
-
-       {/*<div className='w-full max-w-md space-y-6 rounded-xl border bg-white p-8 shadow-sm'>
-
-       </div>*/}
+      </div>
+      
+      {/* Right side illustration */}
+      <div className='relative hidden overflow-hidden bg-[#0A0A0A] lg:block lg:w-1/2'>
+       <svg width='100%' height='100%' viewBox='0 0 400 560' className='absolute inset-0' preserveAspectRatio='xMidYMid slice'>
+          <rect x='0' y='0' width='400' height='560' fill='#0A0A0A' />
+          <circle cx='70' cy='100' r='65' fill='#FFFFFF' opacity='0.06' />
+          <circle cx='330' cy='70' r='36' fill='#FFFFFF' opacity='0.08' />
+          <rect x='160' y='150' width='80' height='80' rx='8' fill='none' stroke='#FFFFFF' strokeWidth='1' opacity='0.55' transform='rotate(20 200 190)' />
+          <circle cx='200' cy='190' r='10' fill='#FFFFFF' opacity='0.9' />
+          <polygon points='90,290 130,350 50,350' fill='#FFFFFF' opacity='0.85' />
+          <polygon points='330,300 362,352 298,352' fill='#FFFFFF' opacity='0.3' />
+          <circle cx='300' cy='420' r='26' fill='none' stroke='#FFFFFF' strokeWidth='1' opacity='0.6' />
+          <circle cx='300' cy='420' r='12' fill='#FFFFFF' opacity='0.9' />
+          <path d='M110 470 L114 482 L126 486 L114 490 L110 502 L106 490 L94 486 L106 482 Z' fill='#FFFFFF' opacity='0.85' />
+          <circle cx='250' cy='510' r='3' fill='#FFFFFF' opacity='0.5' />
+          <circle cx='270' cy='530' r='2' fill='#FFFFFF' opacity='0.4' />
+          <circle cx='230' cy='530' r='2' fill='#FFFFFF' opacity='0.4' />
+        </svg>
+       </div>
+     
     </div>
     </>
   )
