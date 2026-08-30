@@ -4,12 +4,23 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button' 
-import { X, Plus, Trash2, ImagePlus, Loader2, Search } from 'lucide-react'
+import { X, Plus, Trash2, Loader2, Search } from 'lucide-react'
+import { toast } from '@/components/ui/toast'
 import type { ShoppingList, ShoppingListInput } from '@/Redux/shoppingTypes'
-import { imageApi, useGetImagesQuery } from '@/api/imageApi'
+import {  useGetImagesQuery } from '@/api/imageApi'
 
+//list categorie
 const CATEGORIES = ['Groceries', 'Household', 'Events', 'Electronics', 'Other']
 
+//types for image search
+interface UnsplashImage {
+  id: string
+  urls: {
+    small: string
+    thumb: string
+  }
+  alt_description: string
+}
 const itemSchema = z.object({
   name: z.string().min(1, 'Item name is required'),
   quantity: z.coerce.number().min(1, 'Quantity must be at least 1'),
@@ -39,6 +50,7 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
     const [searchTerm, setSearchTerm] = useState<string>('')
     const [triggerSearch, setTriggerSearch] = useState<string>('')
     const [showSearchGrid, setShowSearchGrid] = useState<boolean>(false)
+    const [isLocalLoading, setIsLocalLoading] = useState<boolean>(false) 
 
     //RTK query
     const { data: searchData, isFetching: isSearching } = useGetImagesQuery(triggerSearch, {
@@ -88,16 +100,24 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
        setTriggerSearch('')
        setShowSearchGrid(false)
     }, [initialData, open])
-
+     
+    //image handler
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0]
       if (!file) return
-
+      
+      setIsLocalLoading(true)
       const reader = new FileReader()
       reader.onloadend = () => {
         const image = typeof reader.result === 'string' ? reader.result : ''
         setImagePreview(image)
         form.setValue('image', image)
+        setIsLocalLoading(false)
+      }
+
+      reader.onerror = () => {
+        setIsLocalLoading(false)
+        console.error('Failed to read image file')
       }
       reader.readAsDataURL(file)
     }
@@ -118,8 +138,23 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
       setShowSearchGrid(false)
     }
 
-    const handleFormSubmit = (values: ListFormData) => {
-      onSubmit(values as ShoppingListInput)
+    const handleFormSubmit = async (values: ListFormData) => {
+      try {
+       await onSubmit(values as ShoppingListInput)
+       onClose()
+       toast.add({
+        title: initialData ? 'List Updated!' : 'List Created!',
+        description: initialData ? 'Your shopping list has been updated successfully' : 'Your new shopping list has been created',
+        type: 'success',
+      })
+      } catch (error) {
+       toast.add({
+        title: 'Something went wrong',
+        description: 'Failed to save your list. Please try again.',
+        type: 'error',
+      })
+       console.error('Error saving list:', error)
+      }
     }
 
     if (!open) return null
@@ -168,54 +203,82 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
 
           <div className='block space-y-2'>
             <span className='text-sm font-medium'>List Cover Image (optional)</span>
-            <div className='flex items-start gap-3'>
-              
-              
-              <div className="flex-1 space-y-2"> 
+            
+            {/* Image view */}
+            {imagePreview && (
+             <div className='flex items-start gap-3'>  
+              <img src={imagePreview} alt='selected cover' className='h-16 w-16 rounded-md object-cover' />
+                <Button type='button'
+                        onClick={() => {setImagePreview(''); form.setValue('image', '') }}
+                        className='text-xs text-red-500 hover:underline'>
+                        Remove
+                   </Button>
+                 </div>
+                )}
+
                 {/* Web Search Input Bar */}
                 <div className="flex items-center gap-1">
                   <Input 
                     type="text" 
-                    placeholder="Or search web (e.g. fruit)" 
+                    placeholder="Or Unsplash (e.g. fruit)" 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="h-8 text-xs" 
                     disabled={loading}
-                  />
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        handleWebSearch(e as any)
+                      }
+                    }} />
                   <Button 
                     type="button" 
                     onClick={handleWebSearch} 
-                    disabled={loading || !searchTerm.trim()} 
+                    disabled={loading || !searchTerm.trim() || isSearching} 
                     className="h-8 px-2"
+                    aria-label='search images'
                   >
                     {isSearching ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
                   </Button>
-                </div>
-              </div>
-            </div>
+               </div>
+               </div>
 
             {/* Interactive Search Result Dropdown Grid */}
-            {showSearchGrid && searchData?.results && (
+            {showSearchGrid && (
               <div className="mt-2 p-2 border border-gray-200 rounded-lg max-h-40 overflow-y-auto bg-gray-50">
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs font-semibold text-gray-500">Select web photo:</span>
+                  <span className="text-xs font-semibold text-gray-500">Select a photo:</span>
                   <button type="button" onClick={() => setShowSearchGrid(false)} className="text-xs text-gray-400 hover:text-gray-600">hide</button>
                 </div>
+
+            {isSearching ? (
+             <div className="flex justify-center py-4">
+                <Loader2 size={20} className="animate-spin text-gray-400" />
+               </div>
+             ) : searchData?.results?.length > 0 ? (
                 <div className="grid grid-cols-4 gap-2">
-                  {searchData.results.map((img: any) => (
-                    <button
-                      key={img.id}
-                      type="button"
-                      onClick={() => handleSelectWebImage(img.urls.small)}
-                      className="relative h-12 w-full rounded border overflow-hidden hover:opacity-80 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <img src={img.urls.thumb} alt={img.alt_description} className="h-full w-full object-cover" />
-                    </button>
-                  ))}
-                </div>
+            {searchData.results.map((img: UnsplashImage) => (
+              <button
+                    key={img.id}
+                    type="button"
+                    onClick={() => handleSelectWebImage(img.urls.small)}
+                    className="relative h-12 w-full rounded border overflow-hidden hover:opacity-80 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    aria-label={`Select image: ${img.alt_description || 'Unsplash image'}`}>
+              <img 
+                  src={img.urls.thumb} 
+                  alt={img.alt_description || 'Unsplash image'} 
+                  className="h-full w-full object-cover"
+                  loading="lazy"/>
+            </button>
+          ))}
               </div>
-            )}
-          </div>
+               ) : (
+               <p className='py-2 text-xs text-gray-400 text-center'>
+                No results for "{searchTerm}". Try another term.
+              </p>
+             )}
+            </div>
+          )}
 
           <div className='space-y-2'>
             <div className='flex items-center justify-between'>
@@ -264,8 +327,15 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
             >
               Cancel
             </button>
-            <Button type='submit' disabled={loading}>
-              {loading ? (initialData ? 'Saving...' : 'Creating...') : (initialData ? 'Save changes' : 'Create list')}
+            <Button type='submit' disabled={loading} className='min-w-25'>
+              {loading ? (
+                <>
+                  <Loader2 size={16} className='animate-spin mr-2' />
+                  {initialData ? 'Saving...' : 'Creating...'}
+                </>
+              ) : (
+                initialData ? 'Save changes' : 'Create list'
+              )}
             </Button>
           </div>
         </form>

@@ -23,13 +23,13 @@ export const EmptyState = ({ title, description, actionLabel, onAction }: EmptyS
                      strokeLinejoin='round' 
                      d='M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z'/> 
                </svg>
-               <h2 className='mt-6 text-2xl font-bold text-gray-900'>{title}</h2>
-               <p className='mt-4 text-pretty text-gray-700'>{description}</p>
+               <h2 className='mt-2 text-[23px] font-medium tracking-tight text-gray-900'>{title}</h2>
+               <p className='mt-2 text-sm text-gray-700'>{description}</p>
                {actionLabel && onAction && (
                 <button
                       type='button'
                       onClick={onAction}
-                      className='mt-6 block w-full rounded-lg bg-gray-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800'>
+                      className='mt-6 block w-full rounded-lg bg-black px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800'>
                         {actionLabel}
                       </button>
                   )}
