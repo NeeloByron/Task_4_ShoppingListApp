@@ -6,12 +6,14 @@ import { Route, Routes, Navigate} from 'react-router-dom'
 import Home from '@/Layout/Home'
 import { Profile } from '@/Layout/Profile'
 import { SharedList } from '@/Layout/sharedList'
+import { Toaster } from '@/components/ui/toast'
 
 
 export const ShoppingListApp = () => {
 
   return (
     <>
+    <Toaster />
      <Routes>
        <Route path='/' element={<Navigate to='/login' replace />} />
 

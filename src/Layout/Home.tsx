@@ -12,6 +12,7 @@ import type { ShoppingListInput, ShoppingList } from '@/Redux/shoppingTypes'
 import { shoppingListForm as ShoppingListForm } from '@/components/ui/shoppingListForm'
 import { shareModal as ShareModal } from '@/components/ui/shareModal'
 import ListDetailModal from '@/Layout/ListDetailModal'
+import { toast } from '@/components/ui/toast'
 
 
 const categoryStyles: Record<string, string> = {
@@ -41,12 +42,6 @@ export const Home = () => {
     dispatch(fetchLists())
   }, [dispatch])
 
-  useEffect(() => {
-    if (!successMessage) return
-    const timer = setTimeout(() => setSuccessMessage(''), 3000)
-    return () => clearTimeout(timer)
-  }, [successMessage])
-
   const filteredLists = [...lists]
     .filter((list) => list.name.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
@@ -66,25 +61,30 @@ export const Home = () => {
     }
 
     const handleFormSubmit = async (data: ShoppingListInput) => {
-      try {
         if (editingList) {
           await dispatch(updateList({ id: editingList.id, data})).unwrap()
-          setSuccessMessage('List updated successfully!')
         } else {
           await dispatch(addList(data)).unwrap()
-          setSuccessMessage('List created created successfully!')
         }
         setFormOpen(false)
         setEditingList(null)
-      } catch {
-        }
-      }
+      } 
 
       const handleDeleteConfirm = async () => {
         if (!deleteTarget) return
         try {
           await dispatch(deleteList(deleteTarget.id)).unwrap()
-          setSuccessMessage('List deleted')
+          toast.add({
+            title: 'List deleted',
+            description: `"${deleteTarget.name}" was removed'`,
+            type: 'success',
+          })
+        } catch {
+          toast.add({
+            title: 'Something went wrong',
+            description: 'Failed to delete the list. Please try again.',
+            type: 'error'
+            })
         } finally {
           setDeleteTarget(null)
         }
@@ -95,14 +95,7 @@ export const Home = () => {
       <NavBar />
 
       <div className='mx-auto max-w-6xl space-y-8 px-4 py-10'>
-       {/* success message */}
-      {successMessage && (
-        <div role='alert' className='flex items-center gap-2 rounded-md border border-green-500 bg-green-50 p-3 text-sm text-green-800'>
-          <CheckCircle2 size={16} />
-          {successMessage}
-        </div>
-      )}
-
+      
       {/* search & sort */}
       <div className='flex flex-col gap-2 sm:flex-row'>
          {/* Header */}

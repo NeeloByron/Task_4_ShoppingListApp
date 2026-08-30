@@ -5,7 +5,7 @@ import * as z from 'zod'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button' 
 import { X, Plus, Trash2, Loader2, Search } from 'lucide-react'
-import { toastManager } from '@/components/ui/toast'
+import { toast } from '@/components/ui/toast'
 import type { ShoppingList, ShoppingListInput } from '@/Redux/shoppingTypes'
 import {  useGetImagesQuery } from '@/api/imageApi'
 
@@ -50,7 +50,7 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
     const [searchTerm, setSearchTerm] = useState<string>('')
     const [triggerSearch, setTriggerSearch] = useState<string>('')
     const [showSearchGrid, setShowSearchGrid] = useState<boolean>(false)
-    const [isLocalLoading, setIsLocalLoading] = useState<boolean>(false)
+    const [isLocalLoading, setIsLocalLoading] = useState<boolean>(false) 
 
     //RTK query
     const { data: searchData, isFetching: isSearching } = useGetImagesQuery(triggerSearch, {
@@ -141,16 +141,18 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
     const handleFormSubmit = async (values: ListFormData) => {
       try {
        await onSubmit(values as ShoppingListInput)
-       toastManager.add({
+       toast.add({
         title: initialData ? 'List Updated!' : 'List Created!',
         description: initialData ? 'Your shopping list has been updated successfully' : 'Your new shopping list has been created',
+        type: 'success',
       })
        onClose()
       } catch (error) {
-       toastManager.add({
+       toast.add({
         title: 'Something went wrong',
         description: 'Failed to save your list. Please try again.',
-       })
+        type: 'error',
+      })
        console.error('Error saving list:', error)
       }
     }
