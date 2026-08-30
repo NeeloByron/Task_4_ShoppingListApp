@@ -6,9 +6,9 @@ import { useAppDispatch, useAppSelector} from "@/Redux/store"
 import { registerUser } from '@/Redux/authThunks'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { Eye, EyeOff, ShoppingCart, CheckCircle2 } from 'lucide-react'
+import { Eye, EyeOff, ShoppingCart, CheckCircle2, ListSortAscendingIcon } from 'lucide-react'
 import axiosInstance from '@/api/axiosConfig'
-
+import { toast } from '@/components/ui/toast'
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -126,10 +126,12 @@ useEffect(() => {
   //success message then navigate 
   useEffect(() => {
     if (user && token) {
-      console.log('Registration successful!')
-      setShowSuccess(true)
+      toast.add({
+        title: 'Account created',
+        description: 'Redirecting to your dashboard...',
+        type: 'success'
+      })
       
-      console.log('Registration successful!')
       const timer = setTimeout(() => {
         navigate('/dashboard')
       }, 3000)
@@ -198,19 +200,6 @@ useEffect(() => {
             <p className='text-sm text-gray-500'>Start organizing your shopping</p>
            </div>
 
-           {/*success notification */}
-            {showSuccess && (
-            <div role='alert' className='rounded-md border border-green-500 bg-green-50 p-4 shadow-sm'>
-             <div className='flex items-start gap-4'>
-               <CheckCircle2 size={22} className='-mt-0.5 text-green-700' />
-               <div className='flex-1'>
-              <strong className='block leading-tight font-medium text-green-800'>Account created successfully!</strong>
-              <span className='block text-xs text-green-500 mt-0.5'>Redirecting to dashboard...</span>
-             </div>
-            </div>
-          </div>
-         )}
-
         {/* Display form root error */}
         {form.formState.errors.root && !showSuccess && (
           <div className='rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200'>
@@ -218,46 +207,38 @@ useEffect(() => {
           </div>
         )}
 
-        {/* loading indicator */}
-        {submitAttemped && loading && !showSuccess && (
-        <div className='flex items-center gap-3'>
-              <span className='h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-gray-700' />
-              <p className='text-sm text-gray-600'>Creating your account...</p>
-            </div>
-        )}
-
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
              <div className='flex gap-3'>
              <label className='block flex-1 space-y-2'>
                 <span className='text-sm font-medium text-gray-900'>Name</span>
-                <Input placeholder='First Name' className='rounded-[10px]'{...form.register('name')} disabled={loading || showSuccess} />
+                <Input placeholder='First Name' className='rounded-[10px]'{...form.register('name')} disabled={loading} />
                 <span className='text-sm text-red-500'>{form.formState.errors.name?.message}</span>
               </label>
               
              <label className='block flex-1 space-y-2'>
                 <span className='text-sm font-medium text-gray-900'>Surname</span>
-                <Input placeholder='Last Name' className='rounded-[10px]' {...form.register('surname')} disabled={loading || showSuccess} />
+                <Input placeholder='Last Name' className='rounded-[10px]' {...form.register('surname')} disabled={loading} />
                 <span className='text-sm text-red-500'>{form.formState.errors.surname?.message}</span>
               </label>
               </div>
 
             <label className='block space-y-2'>
               <span className='text-sm font-medium text-gray-900'>Email Address</span>
-              <Input type='email' placeholder='name@email.com' className='rounded-[10px]' {...form.register('email')} disabled={loading || showSuccess} />
+              <Input type='email' placeholder='name@email.com' className='rounded-[10px]' {...form.register('email')} disabled={loading} />
               {checkingEmail && <span className='text-xs text-gray-400'>Checking availability...</span>}
               <span className='text-sm text-red-500'>{form.formState.errors.email?.message}</span>
             </label>
 
             <label className='block space-y-2'>
               <span className='text-sm font-medium text-gray-900'>Cell Number</span>
-              <Input type='tel' inputMode='numeric' maxLength={15} placeholder='082 123 4567' className='rounded-[10px]' {...form.register('cellNumber')} disabled={loading || showSuccess} />
+              <Input type='tel' inputMode='numeric' maxLength={15} placeholder='082 123 4567' className='rounded-[10px]' {...form.register('cellNumber')} disabled={loading} />
               <span className="text-sm text-red-500">{form.formState.errors.cellNumber?.message}</span>
             </label>
 
             <label className='block space-y-2'>
               <span className='text-sm font-medium text-gray-900'>Password</span>
               <div className='relative'>
-                <Input type={showPassword ? 'text' : 'password'} placeholder='Create a password' className='rounded-md pr-10' {...form.register('password')} disabled={loading || showSuccess}/>
+                <Input type={showPassword ? 'text' : 'password'} placeholder='Create a password' className='rounded-md pr-10' {...form.register('password')} disabled={loading}/>
                 <button
                   type='button'
                   onClick={() => setShowPassword((prev) => !prev)}
@@ -286,7 +267,7 @@ useEffect(() => {
               <span className='text-sm text-red-500'>{form.formState.errors.confirmPassword?.message}</span>
             </label>
 
-            <Button type='submit' className='w-full rounded-[10px] bg-black hover:bg-gray-800' disabled={loading || showSuccess}>
+            <Button type='submit' className='w-full rounded-[10px] bg-black hover:bg-gray-800' disabled={loading}>
              {loading ? (
               <span className='flex items-center justify-center gap-2'>
                 <span className='h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent' />

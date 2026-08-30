@@ -1,9 +1,8 @@
 import NavBar from '@/Layout/NavBar'
-import { useNavigate } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '@/Redux/store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Search, Share2, Pencil, Trash2, CheckCircle2 } from 'lucide-react'
+import { Search, Share2, Pencil, Trash2 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { confirmationModal as ConfirmationModal } from '@/components/ui/confirmationModal'
@@ -24,9 +23,7 @@ const categoryStyles: Record<string, string> = {
 }
 
 export const Home = () => {
-  const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const { user } = useAppSelector((state) => state.auth)
   const { lists, loading } = useAppSelector((state) => state.shopping)
 
   const [search, setSearch] = useState('')
@@ -34,7 +31,6 @@ export const Home = () => {
   const [formOpen, setFormOpen] = useState(false)
   const [editingList, setEditingList] = useState<ShoppingList | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<ShoppingList | null>(null)
-  const [successMessage, setSuccessMessage] = useState('')
   const [shareTarget, setShareTarget] = useState<ShoppingList | null>(null)
   const [viewingList, setViewList] = useState<ShoppingList | null>(null)
 
@@ -72,23 +68,24 @@ export const Home = () => {
 
       const handleDeleteConfirm = async () => {
         if (!deleteTarget) return
+        const deletedName = deleteTarget.name
         try {
           await dispatch(deleteList(deleteTarget.id)).unwrap()
+          setDeleteTarget(null)
           toast.add({
             title: 'List deleted',
-            description: `"${deleteTarget.name}" was removed'`,
+            description: `"${deletedName}" was removed.`,
             type: 'success',
           })
         } catch {
+          setDeleteTarget(null)
           toast.add({
             title: 'Something went wrong',
             description: 'Failed to delete the list. Please try again.',
             type: 'error'
             })
-        } finally {
-          setDeleteTarget(null)
-        }
-      }
+            }
+          }
 
   return (
     <>

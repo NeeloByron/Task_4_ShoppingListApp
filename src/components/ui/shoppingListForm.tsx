@@ -141,12 +141,12 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
     const handleFormSubmit = async (values: ListFormData) => {
       try {
        await onSubmit(values as ShoppingListInput)
+       onClose()
        toast.add({
         title: initialData ? 'List Updated!' : 'List Created!',
         description: initialData ? 'Your shopping list has been updated successfully' : 'Your new shopping list has been created',
         type: 'success',
       })
-       onClose()
       } catch (error) {
        toast.add({
         title: 'Something went wrong',
