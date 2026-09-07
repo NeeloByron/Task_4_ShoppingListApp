@@ -30,6 +30,12 @@
 
 - https://medium.com/@panat.siriwong/lets-initialize-redux-the-toolkit-in-react-typescript-c533991fc97c
 
+## Screenshot 
+
+<p align="center">
+  <img src="./src//assets/Shopping-App.png" width="700">
+</p>
+
 ### How to run locally
 
 ```bash
