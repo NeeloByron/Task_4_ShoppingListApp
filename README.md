@@ -6,12 +6,20 @@
 
 ---
 
+## Screenshot 
+
+<p align="center">
+  <img src="./src/assets/Shopping-App.png" alt="Shopping List App Dashboard" width="700">
+</p>
+
+## Features
+
 ### Authentication
 
 - User Registeration
 - User Login
 - Protect Routes
-- JWT Token-based Authentication (https://www.youtube.com/watch?v=8aIXUMYWJds)
+-  [JWT Token-based Authentication](https://www.youtube.com/watch?v=8aIXUMYWJds)
 
 ### Shopping List Manangement
 - Create - Add new shopping lists
@@ -30,17 +38,22 @@
 
 - https://medium.com/@panat.siriwong/lets-initialize-redux-the-toolkit-in-react-typescript-c533991fc97c
 
-## Screenshot 
+## Prerequisities
+- Node.js (v14 or higer)
+- npm 
 
-<p align="center">
-  <img src="./src//assets/Shopping-App.png" width="700">
-</p>
+### Getting Started
 
 ### How to run locally
 
 ```bash
-# clone repo 
+# clone the repository 
 git clone https://github.com/NeeloByron/Task_4_ShoppingListApp.git 
+```
+
+```bash
+# Navigate to the project directory 
+cd Task_4_ShoppingListApp
 ```
 
 ```bash
@@ -58,3 +71,17 @@ npm install jsonwebtoken body-parser
 # Run
 npm run dev
 ```
+
+## Technologies Used
+
+- React - Frontend UI library
+- TypeScript - Type-safe JavaScript
+- Redux - State-management
+- JSON Server - Mock REST API   
+- JWT - Authentication 
+- Concurrently - Run multiple commands concurrently
+
+Acknowledgements 
+
+- Authentication tutorial by  [JWT Authentication Tutorial](https://www.youtube.com/watch?v=8aIXUMYWJds)
+- Redux setup guide by [Redux Toolkit Setup Guide](https://medium.com/@panat.siriwong/lets-initialize-redux-the-toolkit-in-react-typescript-c533991fc97c)
