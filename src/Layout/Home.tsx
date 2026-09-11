@@ -131,6 +131,10 @@ export const Home = () => {
             <div className='grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'>
               {filteredLists.map((list) => (
                 <div key={list.id} onClick={() => setViewList(list)} className='cursor-pointer rounded-xl border bg-white p-4 hover:border-gray-300'>
+                  {(list.image || list.items.find((item) => item.image)?.image) && (
+                    <img src={list.image || list.items.find((item) => item.image)?.image}
+                      alt={list.name} className='mb-3 h-36 w-full rounded-lg object-cover' />
+                  )}
                   <div className='flex items-start justify-between'>
                     <p className='font-medium'>{list.name}</p>
                     <button aria-label={`Share ${list.name}`} onClick={(e) => { e.stopPropagation(); setShareTarget(list) }}>
