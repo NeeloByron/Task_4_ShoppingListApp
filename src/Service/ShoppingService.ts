@@ -27,7 +27,7 @@ export const shoppingService ={
     },
 
     async updateList(id: string, data: ShoppingListInput): Promise<ShoppingList> {
-        const items = data.items.map((item: any, index) => ({
+        const items = data.items.map((item, index) => ({
             ...item,
             id: item.id || `${Date.now()}-${index}`,
         }));

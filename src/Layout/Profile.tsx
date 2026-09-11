@@ -23,7 +23,7 @@ const passwordSchema = z.object({
     currentPassword: z.string().min(1, 'Current password is required'),
     newPassword: z.string()
       .min(8, 'Password must be atleast 8 characters')
-      .regex(/[A-z]/, 'Must contain atleast one uppercase letter')
+      .regex(/[A-Z]/, 'Must contain atleast one uppercase letter')
       .regex(/[a-z]/, 'Must contain atleast one lowercase letter')
       .regex(/[0-9]/, 'Must contain at least one number'),
     confirmPassword: z.string().min(1, 'Please confirm your new password'),
@@ -63,8 +63,8 @@ export const Profile = () => {
         setProfileSuccess(false)
         try {
            await dispatch(updateProfile(values)).unwrap()
-           setPasswordSuccess(true)
-           setTimeout(() => setPasswordSuccess(false), 3000) 
+           setProfileSuccess(true)
+           setTimeout(() => setProfileSuccess(false), 3000)
         } catch (err: any) {
             profileForm.setError('root', { message: err || 'Failed to update profile'})
         }
@@ -80,7 +80,8 @@ export const Profile = () => {
             setPasswordSuccess(true)
             passwordForm.reset()
             setTimeout(() => setPasswordSuccess(false), 3000)
-        } catch (err: any) {
+        } catch (err: unknown) {
+            passwordForm.setError('root', { message: err instanceof Error ? err.message : String(err || 'Failed to change password') })
         }
     }
   return (
@@ -173,27 +174,38 @@ export const Profile = () => {
                    <label className='block space-y-2'>
                      <span className='text-sm font-medium'>Current password</span>
                      <div className='relative'>
-                        <Input type={showCurrent ? 'text' : 'password'} className='rounded-md pr-10' {...passwordForm.register('currentPassword')} disabled={loading} />
-                        <button type='button'
-                                onClick={() => setShowCurrent((p) => !p)} className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-500'
-                                tabIndex={-1}
-                                aria-label={showCurrent ? 'Hide password' : 'Show password'}>
-                                    {showCurrent ? <EyeOff size={18} /> : <Eye size={18} />}
-                        </button>
+                       <Input type={showCurrent ? 'text' : 'password'} autoComplete='current-password' className='rounded-md pr-10' {...passwordForm.register('currentPassword')} disabled={loading} />
+                       <button type='button' onClick={() => setShowCurrent((value) => !value)} disabled={loading}
+                         className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500'
+                         aria-label={showCurrent ? 'Hide current password' : 'Show current password'} aria-pressed={showCurrent}>
+                         {showCurrent ? <EyeOff size={18} /> : <Eye size={18} />}
+                       </button>
+                     </div>
+                     <span className='text-sm text-red-500'>{passwordForm.formState.errors.currentPassword?.message}</span>
+                   </label>
+
+                   <label className='block space-y-2'>
+                     <span className='text-sm font-medium'>New password</span>
+                     <div className='relative'>
+                       <Input type={showNew ? 'text' : 'password'} autoComplete='new-password' className='rounded-md pr-10' {...passwordForm.register('newPassword')} disabled={loading} />
+                       <button type='button' onClick={() => setShowNew((value) => !value)} disabled={loading}
+                         className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500'
+                         aria-label={showNew ? 'Hide new password' : 'Show new password'} aria-pressed={showNew}>
+                         {showNew ? <EyeOff size={18} /> : <Eye size={18} />}
+                       </button>
                      </div>
                      <span className='text-sm text-red-500'>{passwordForm.formState.errors.newPassword?.message}</span>
-                   </label> 
+                   </label>
 
                    <label className='block space-y-2'>
                      <span className='text-sm font-medium'>Confirm new password</span>
                      <div className='relative'>
-                        <Input type={showConfirm ? 'text' : 'password'} className='rounded-md pr-10' {...passwordForm.register('currentPassword')} disabled={loading} />
-                        <button type='button'
-                                onClick={() => setShowConfirm((p) => !p)} className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-500'
-                                tabIndex={-1}
-                                aria-label={showCurrent ? 'Hide password' : 'Show password'}>
-                                    {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
-                        </button>
+                       <Input type={showConfirm ? 'text' : 'password'} autoComplete='new-password' className='rounded-md pr-10' {...passwordForm.register('confirmPassword')} disabled={loading} />
+                       <button type='button' onClick={() => setShowConfirm((value) => !value)} disabled={loading}
+                         className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500'
+                         aria-label={showConfirm ? 'Hide confirm new password' : 'Show confirm new password'} aria-pressed={showConfirm}>
+                         {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                       </button>
                      </div>
                      <span className='text-sm text-red-500'>{passwordForm.formState.errors.confirmPassword?.message}</span>
                    </label>

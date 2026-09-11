@@ -23,7 +23,7 @@
       "surname": "Neelo",
       "email": "neelo@gmail.com",
       "cellNumber": 792985272,
-      "password": "88c10c463f1ca36c7f672e937321a342224d92c9f151dd93bc8d4a500b067933",
+      "password": "bcf4fd9f68fbff8768d6c6de35295147b6ba37695126fa88ea636912f03ce5ff",
       "createdAt": "2026-08-29T13:56:03.478Z",
       "id": "_BoPg7x0Klc"
     },
@@ -182,6 +182,24 @@
       ],
       "createdAt": "2026-08-29T03:59:24.959Z",
       "id": "zWdBAYzRqKY"
+    },
+    {
+      "userId": "_BoPg7x0Klc",
+      "name": "Dinner",
+      "category": "Groceries",
+      "notes": "",
+      "image": "https://images.unsplash.com/photo-1547573854-74d2a71d0826?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQzODg5fDB8MXxzZWFyY2h8Mnx8RGlubmVyfGVufDB8fHx8MTc4OTE1MDY3MXww&ixlib=rb-4.1.0&q=80&w=400",
+      "items": [
+        {
+          "id": "1789150723562-0",
+          "image": "",
+          "name": "ijkn",
+          "quantity": 1,
+          "checked": false
+        }
+      ],
+      "createdAt": "2026-09-11T18:18:43.562Z",
+      "id": "Po8SbiUBZ2s"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

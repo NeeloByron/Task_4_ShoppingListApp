@@ -1,4 +1,5 @@
 export interface Shoppingitem {
+    image?: string;
     id: string;
     name: string;
     quantity: number;
@@ -21,7 +22,7 @@ export interface ShoppingListInput {
     category: string;
     notes?: string;
     image?: string;
-    items: Omit<Shoppingitem, 'id'>[];
+    items: (Omit<Shoppingitem, 'id'> & { id?: string })[];
 }
 
 export interface ShoppingState {

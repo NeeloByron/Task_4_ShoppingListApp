@@ -6,7 +6,7 @@ import * as z from 'zod'
 import { useAppDispatch, useAppSelector } from '@/Redux/store'
 import { loginUser } from '@/Redux/authThunks'
 import { useEffect, useRef, useState } from 'react'
-import { CheckCircle2, Eye, EyeOff, ShoppingCart } from 'lucide-react'
+import { Eye, EyeOff, ShoppingCart } from 'lucide-react'
 import { toast } from '@/components/ui/toast'
 
 // Zod schema login validation
@@ -139,7 +139,7 @@ export const Login = () => {
              </div>
               
               {/* connection error if submit attempted and still loading */}
-             {form.formState.errors.root && (
+             {submitAttempted && form.formState.errors.root && (
               <div className='rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200'>
                 {form.formState.errors.root.message}</div>)}
 

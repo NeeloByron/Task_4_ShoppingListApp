@@ -34,7 +34,7 @@ export const logoutUser = createAsyncThunk(
             const state = getState() as RootState;
             const token = state.auth.token;
             if (token) {
-                await authService.logout(token);
+                await authService.logout();
             }
         } catch (error: any) {
             return rejectWithValue(error.message || 'Logout failed');

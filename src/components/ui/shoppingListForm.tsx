@@ -1,27 +1,20 @@
-import React, { useState, useEffect } from 'react'
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useEffect } from 'react'
+import { useForm, useFieldArray, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button' 
-import { X, Plus, Trash2, Loader2, Search } from 'lucide-react'
+import { X, Plus, Trash2, Loader2 } from 'lucide-react'
 import { toast } from '@/components/ui/toast'
 import type { ShoppingList, ShoppingListInput } from '@/Redux/shoppingTypes'
-import {  useGetImagesQuery } from '@/api/imageApi'
+import { UnsplashImagePicker } from './UnsplashImagePicker'
 
 //list categorie
 const CATEGORIES = ['Groceries', 'Household', 'Events', 'Electronics', 'Other']
 
-//types for image search
-interface UnsplashImage {
-  id: string
-  urls: {
-    small: string
-    thumb: string
-  }
-  alt_description: string
-}
 const itemSchema = z.object({
+  id: z.string().optional(),
+  image: z.string().optional(),
   name: z.string().min(1, 'Item name is required'),
   quantity: z.coerce.number().min(1, 'Quantity must be at least 1'),
   checked: z.boolean(),
@@ -45,18 +38,7 @@ type ShoppingListFormProps = {
   loading?: boolean
 }
 
-export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loading }: ShoppingListFormProps) => {
-    const [imagePreview, setImagePreview] = useState<string>('')
-    const [searchTerm, setSearchTerm] = useState<string>('')
-    const [triggerSearch, setTriggerSearch] = useState<string>('')
-    const [showSearchGrid, setShowSearchGrid] = useState<boolean>(false)
-    const [isLocalLoading, setIsLocalLoading] = useState<boolean>(false) 
-
-    //RTK query
-    const { data: searchData, isFetching: isSearching } = useGetImagesQuery(triggerSearch, {
-      skip: !triggerSearch, 
-    })
-
+export const ShoppingListForm = ( { open, onClose, onSubmit, initialData, loading }: ShoppingListFormProps) => {
     const form = useForm<ListFormData>({
      resolver: zodResolver(listSchema),
       defaultValues: {
@@ -81,10 +63,9 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
         notes: initialData?.notes || '',
         image: initialData?.image || '',
         items: initialData?.items.length
-          ? initialData.items.map((i) => ({ name: i.name, quantity: i.quantity, checked: i.checked }))
+          ? initialData.items.map((i) => ({ id: i.id, name: i.name, quantity: i.quantity, checked: i.checked, image: i.image || '' }))
           : [{ name: '', quantity: 1, checked: false }],
       })
-      setImagePreview(initialData?.image || '')
     } else {
       form.reset({
         name: '',
@@ -93,50 +74,12 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
         image: '',
         items: [{ name: '', quantity: 1, checked: false }],
       })
-      setImagePreview('')
      }
-        //reset
-       setSearchTerm('')
-       setTriggerSearch('')
-       setShowSearchGrid(false)
-    }, [initialData, open])
-     
-    //image handler
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0]
-      if (!file) return
-      
-      setIsLocalLoading(true)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        const image = typeof reader.result === 'string' ? reader.result : ''
-        setImagePreview(image)
-        form.setValue('image', image)
-        setIsLocalLoading(false)
-      }
+    }, [initialData, open, form])
 
-      reader.onerror = () => {
-        setIsLocalLoading(false)
-        console.error('Failed to read image file')
-      }
-      reader.readAsDataURL(file)
-    }
-
-    //Trigger API call
-    const handleWebSearch = (e: React.MouseEvent) => {
-      e.preventDefault()
-      if (searchTerm.trim()) {
-        setTriggerSearch(searchTerm)
-        setShowSearchGrid(true)
-      }
-    }
-
-    // select image and press URL to react hook
-    const handleSelectWebImage = (url: string) => {
-      setImagePreview(url)
-      form.setValue('image', url)
-      setShowSearchGrid(false)
-    }
+    const watchedItems = useWatch({ control: form.control, name: 'items' })
+    const coverImage = useWatch({ control: form.control, name: 'image' })
+    const listName = useWatch({ control: form.control, name: 'name' })
 
     const handleFormSubmit = async (values: ListFormData) => {
       try {
@@ -201,84 +144,12 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
             />
           </label>
 
-          <div className='block space-y-2'>
-            <span className='text-sm font-medium'>List Cover Image (optional)</span>
-            
-            {/* Image view */}
-            {imagePreview && (
-             <div className='flex items-start gap-3'>  
-              <img src={imagePreview} alt='selected cover' className='h-16 w-16 rounded-md object-cover' />
-                <Button type='button'
-                        onClick={() => {setImagePreview(''); form.setValue('image', '') }}
-                        className='text-xs text-red-500 hover:underline'>
-                        Remove
-                   </Button>
-                 </div>
-                )}
-
-                {/* Web Search Input Bar */}
-                <div className="flex items-center gap-1">
-                  <Input 
-                    type="text" 
-                    placeholder="Or Unsplash (e.g. fruit)" 
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="h-8 text-xs" 
-                    disabled={loading}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault()
-                        handleWebSearch(e as any)
-                      }
-                    }} />
-                  <Button 
-                    type="button" 
-                    onClick={handleWebSearch} 
-                    disabled={loading || !searchTerm.trim() || isSearching} 
-                    className="h-8 px-2"
-                    aria-label='search images'
-                  >
-                    {isSearching ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
-                  </Button>
-               </div>
-               </div>
-
-            {/* Interactive Search Result Dropdown Grid */}
-            {showSearchGrid && (
-              <div className="mt-2 p-2 border border-gray-200 rounded-lg max-h-40 overflow-y-auto bg-gray-50">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs font-semibold text-gray-500">Select a photo:</span>
-                  <button type="button" onClick={() => setShowSearchGrid(false)} className="text-xs text-gray-400 hover:text-gray-600">hide</button>
-                </div>
-
-            {isSearching ? (
-             <div className="flex justify-center py-4">
-                <Loader2 size={20} className="animate-spin text-gray-400" />
-               </div>
-             ) : searchData?.results?.length > 0 ? (
-                <div className="grid grid-cols-4 gap-2">
-            {searchData.results.map((img: UnsplashImage) => (
-              <button
-                    key={img.id}
-                    type="button"
-                    onClick={() => handleSelectWebImage(img.urls.small)}
-                    className="relative h-12 w-full rounded border overflow-hidden hover:opacity-80 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    aria-label={`Select image: ${img.alt_description || 'Unsplash image'}`}>
-              <img 
-                  src={img.urls.thumb} 
-                  alt={img.alt_description || 'Unsplash image'} 
-                  className="h-full w-full object-cover"
-                  loading="lazy"/>
-            </button>
-          ))}
-              </div>
-               ) : (
-               <p className='py-2 text-xs text-gray-400 text-center'>
-                No results for "{searchTerm}". Try another term.
-              </p>
-             )}
-            </div>
-          )}
+          <UnsplashImagePicker
+            key={String(open) + (initialData?.id || 'new')}
+            label='List cover image (optional)' searchHint={listName || ''}
+            value={coverImage || ''} disabled={loading}
+            onChange={(url) => form.setValue('image', url, { shouldDirty: true })}
+          />
 
           <div className='space-y-2'>
             <div className='flex items-center justify-between'>
@@ -294,7 +165,8 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
             </div>
 
             {fields.map((field, index) => (
-              <div key={field.id} className='flex items-start gap-2'>
+              <div key={field.id} className='space-y-3 rounded-md border border-gray-200 p-3'>
+              <div className='flex items-start gap-2'>
                 <div className='flex-1'>
                   <Input placeholder='Item name' className='rounded-md' {...form.register(`items.${index}.name`)} disabled={loading} />
                   <span className='text-xs text-red-500'>{form.formState.errors.items?.[index]?.name?.message}</span>
@@ -311,6 +183,13 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
                 >
                   <Trash2 size={16} />
                 </button>
+              </div>
+              <UnsplashImagePicker
+                label={`Image for ${watchedItems?.[index]?.name || 'this item'}`}
+                searchHint={watchedItems?.[index]?.name || ''}
+                value={watchedItems?.[index]?.image || ''} disabled={loading}
+                onChange={(url) => form.setValue(`items.${index}.image`, url, { shouldDirty: true })}
+              />
               </div>
             ))}
             {form.formState.errors.items?.root?.message && (
@@ -345,4 +224,4 @@ export const shoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
   )
 }
 
-export default shoppingListForm
+export default ShoppingListForm

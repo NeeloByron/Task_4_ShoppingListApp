@@ -2,8 +2,6 @@ import CryptoJS from 'crypto-js'
 import axiosInstance from '@/api/axiosConfig';
 import type { User, RegisterData, LoginCredentials, updateProfileData, ChangePasswordData } from "@/Redux/authTypes";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
 const hashPassword = (password: string): string => {
     return CryptoJS.SHA256(password).toString();
 }
@@ -51,7 +49,7 @@ export const authService = {
        return { user: newUser, token}
     },
 
-    async logout(_token: string): Promise<void> {
+    async logout(): Promise<void> {
         // For json-server
         return Promise.resolve();
     },
