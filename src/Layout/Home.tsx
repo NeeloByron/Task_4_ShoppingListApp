@@ -2,7 +2,7 @@ import NavBar from '@/Layout/NavBar'
 import { useAppSelector, useAppDispatch } from '@/Redux/store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Search, Share2, Pencil, Trash2 } from 'lucide-react'
+import { Search, Share2, Pencil, Trash2, Plus } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { confirmationModal as ConfirmationModal } from '@/components/ui/confirmationModal'
@@ -29,6 +29,7 @@ export const Home = () => {
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState('date')
   const [formOpen, setFormOpen] = useState(false)
+  const [startWithNewItem, setStartWithNewItem] = useState(false)
   const [editingList, setEditingList] = useState<ShoppingList | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<ShoppingList | null>(null)
   const [shareTarget, setShareTarget] = useState<ShoppingList | null>(null)
@@ -47,11 +48,13 @@ export const Home = () => {
     })
 
     const openAddForm = () => {
+      setStartWithNewItem(false)
       setEditingList(null)
       setFormOpen(true)
     }
 
-    const openEditForm = (list: ShoppingList) => {
+    const openEditForm = (list: ShoppingList, addItem = false) => {
+      setStartWithNewItem(addItem)
       setEditingList(list)
       setFormOpen(true)
     }
@@ -145,7 +148,16 @@ export const Home = () => {
                   <span className={`rounded-full px-2.5 py-1 text-xs ${categoryStyles[list.category] || 'bg-gray-100 text-gray-700'}`}>
                     {list.category}
                   </span>
-                  <div className='mt-3.5 flex justify-end gap-2.5'>
+                  <div className='mt-3.5 flex items-center justify-end gap-2.5'>
+                    <button
+                      type='button'
+                      aria-label={`Add item to ${list.name}`}
+                      title='Add item'
+                      onClick={(e) => { e.stopPropagation(); openEditForm(list, true) }}
+                      className='text-gray-500 hover:text-gray-700'
+                    >
+                      <Plus size={19} aria-hidden='true' />
+                    </button>
                     <button aria-label={`Edit ${list.name}`} onClick={(e) =>  { e.stopPropagation(); openEditForm(list)} }>
                       <Pencil size={19} className='text-gray-500 hover:text-gray-700' />
                     </button>
@@ -163,6 +175,7 @@ export const Home = () => {
         onClose={() => { setFormOpen(false); setEditingList(null) }}
         onSubmit={handleFormSubmit}
         initialData={editingList}
+        startWithNewItem={startWithNewItem}
         loading={loading}
       />
 

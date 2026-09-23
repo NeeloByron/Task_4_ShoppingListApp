@@ -161,29 +161,6 @@
       "id": "AzfGYiRHuz4"
     },
     {
-      "userId": "EadVJBcE3Do",
-      "name": "bash",
-      "category": "Electronics",
-      "notes": "",
-      "image": "",
-      "items": [
-        {
-          "name": "apple",
-          "quantity": 1,
-          "checked": false,
-          "id": "1787997508177-0"
-        },
-        {
-          "name": "Beef meat",
-          "quantity": 1,
-          "checked": false,
-          "id": "1787997508177-1"
-        }
-      ],
-      "createdAt": "2026-08-29T03:59:24.959Z",
-      "id": "zWdBAYzRqKY"
-    },
-    {
       "userId": "_BoPg7x0Klc",
       "name": "Dinner",
       "category": "Groceries",

@@ -36,9 +36,10 @@ type ShoppingListFormProps = {
   onSubmit: (data: ShoppingListInput) => void
   initialData?: ShoppingList | null
   loading?: boolean
+  startWithNewItem?: boolean
 }
 
-export const ShoppingListForm = ( { open, onClose, onSubmit, initialData, loading }: ShoppingListFormProps) => {
+export const ShoppingListForm = ( { open, onClose, onSubmit, initialData, loading, startWithNewItem = false }: ShoppingListFormProps) => {
     const form = useForm<ListFormData>({
      resolver: zodResolver(listSchema),
       defaultValues: {
@@ -63,7 +64,10 @@ export const ShoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
         notes: initialData?.notes || '',
         image: initialData?.image || '',
         items: initialData?.items.length
-          ? initialData.items.map((i) => ({ id: i.id, name: i.name, quantity: i.quantity, checked: i.checked, image: i.image || '' }))
+          ? [
+              ...initialData.items.map((i) => ({ id: i.id, name: i.name, quantity: i.quantity, checked: i.checked, image: i.image || '' })),
+              ...(startWithNewItem ? [{ name: '', quantity: 1, checked: false }] : []),
+            ]
           : [{ name: '', quantity: 1, checked: false }],
       })
     } else {
@@ -75,7 +79,7 @@ export const ShoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
         items: [{ name: '', quantity: 1, checked: false }],
       })
      }
-    }, [initialData, open, form])
+    }, [initialData, open, form, startWithNewItem])
 
     const watchedItems = useWatch({ control: form.control, name: 'items' })
     const coverImage = useWatch({ control: form.control, name: 'image' })
@@ -168,7 +172,7 @@ export const ShoppingListForm = ( { open, onClose, onSubmit, initialData, loadin
               <div key={field.id} className='space-y-3 rounded-md border border-gray-200 p-3'>
               <div className='flex items-start gap-2'>
                 <div className='flex-1'>
-                  <Input placeholder='Item name' className='rounded-md' {...form.register(`items.${index}.name`)} disabled={loading} />
+                  <Input placeholder='Item name' className='rounded-md' {...form.register(`items.${index}.name`)} disabled={loading} autoFocus={startWithNewItem && index === fields.length - 1} />
                   <span className='text-xs text-red-500'>{form.formState.errors.items?.[index]?.name?.message}</span>
                 </div>
                 <div className='w-20'>
