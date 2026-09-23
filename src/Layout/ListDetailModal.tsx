@@ -34,10 +34,6 @@ export const ListDetailModal = ({ open, list, onClose, onEdit }: ListDetailModal
             <span className={`inline-block rounded-full px-2.5 py-1 text-xs ${categoryStyles[list.category] || 'bg-gray-100 text-gray-700'}`}>
             {list.category}</span>
 
-            {list.image && (
-              <img src={list.image} alt={list.name} className='mt-4 max-h-64 w-full rounded-lg object-cover' />
-            )}
-
             {list.notes && (
             <p className='mt-3 text-sm text-gray-600'>{list.notes}</p>
             )}

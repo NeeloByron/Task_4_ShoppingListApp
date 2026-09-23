@@ -54,9 +54,6 @@ export const SharedList = () => {
                      {list.category}
                    </span>
                     </div>
-                    {list.image && (
-                      <img src={list.image} alt={list.name} className='mt-4 max-h-64 w-full rounded-lg object-cover' />
-                    )}
                     {list.notes && <p className='mt-2 text-sm text-gray-600'>{list.notes}</p>}
 
                    <div className='mt-6 divide-y divide-gray-100'>
