@@ -13,7 +13,7 @@ import { shareModal as ShareModal } from '@/components/ui/shareModal'
 import ListDetailModal from '@/Layout/ListDetailModal'
 import { toast } from '@/components/ui/toast'
 
-
+// category styles each category has it's own unique color
 const categoryStyles: Record<string, string> = {
     Groceries: 'bg-teal-50 text-teal-800',
     Household: 'bg-amber-50 text-amber-800',
@@ -26,76 +26,111 @@ export const Home = () => {
   const dispatch = useAppDispatch()
   const { lists, loading } = useAppSelector((state) => state.shopping)
 
-  const [search, setSearch] = useState('')
-  const [sort, setSort] = useState('date')
-  const [formOpen, setFormOpen] = useState(false)
-  const [startWithNewItem, setStartWithNewItem] = useState(false)
-  const [editingList, setEditingList] = useState<ShoppingList | null>(null)
-  const [deleteTarget, setDeleteTarget] = useState<ShoppingList | null>(null)
-  const [shareTarget, setShareTarget] = useState<ShoppingList | null>(null)
-  const [viewingList, setViewList] = useState<ShoppingList | null>(null)
+  const [search, setSearch] = useState('') // search text
+  const [sort, setSort] = useState('date') // Sorting method
+  const [formOpen, setFormOpen] = useState(false) // form is open
+  const [startWithNewItem, setStartWithNewItem] = useState(false) // Form start to add item
+  const [editingList, setEditingList] = useState<ShoppingList | null>(null) // List that is being edited.
+  const [deleteTarget, setDeleteTarget] = useState<ShoppingList | null>(null) // list that is being deleted
+  const [shareTarget, setShareTarget] = useState<ShoppingList | null>(null) // list that is being shared
+  const [viewingList, setViewList] = useState<ShoppingList | null>(null) // list that is being viewed
 
+  // Request the lists when this component mounts.
   useEffect(() => {
     dispatch(fetchLists())
   }, [dispatch])
+  
+  // Ignore capital letters and extra spaces
+  const searchTerm = search.trim().toLocaleLowerCase();
 
   const filteredLists = [...lists]
-    .filter((list) => list.name.toLowerCase().includes(search.toLowerCase()))
-    .sort((a, b) => {
-      if (sort === 'name') return a.name.localeCompare(b.name)
-      if (sort === 'category') return a.category.localeCompare(b.category)
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    .filter((list) => {
+      // checks whether the list name matches.
+      const matchesList = list.name.toLowerCase().includes(searchTerm);
+       // checks whether any item inside the lists matches.
+      const matchesItem = list.items.some((item) =>
+        item.name.toLowerCase().includes(searchTerm)
+      );
+      
+      // show the list if either matches
+      return matchesList || matchesItem;
     })
+    .sort((a, b) => {
+      if (sort === 'name') 
+        return a.name.localeCompare(b.name);
+      if (sort === 'category')
+        return a.category.localeCompare(b.category);
 
+      // show newest list first
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    })
+     
+    // open an empty form for creating a list
     const openAddForm = () => {
       setStartWithNewItem(false)
       setEditingList(null)
       setFormOpen(true)
-    }
-
+    };
+    
+    // Open a form containing an exisiting list
     const openEditForm = (list: ShoppingList, addItem = false) => {
-      setStartWithNewItem(addItem)
-      setEditingList(list)
-      setFormOpen(true)
-    }
+      setStartWithNewItem(addItem);
+      setEditingList(list);
+      setFormOpen(true);
+    };
 
+     // saves a new list / update an existing list
     const handleFormSubmit = async (data: ShoppingListInput) => {
+      try {   
         if (editingList) {
           await dispatch(updateList({ id: editingList.id, data})).unwrap()
-        } else {
-          await dispatch(addList(data)).unwrap()
-        }
-        setFormOpen(false)
-        setEditingList(null)
-      } 
+           } else {
+           await dispatch(addList(data)).unwrap()
+            }
+            // close the form after saving 
+           setFormOpen(false)
+         setEditingList(null)
 
+         toast.add({
+          title: editingList ? 'List updated' : 'Listed created',
+          description: `"${data.name}" was saved.`,
+          type: 'success',
+         });
+      } catch {
+        // keep the form open for the user so they can try again
+        toast.add({
+          title: 'Could not save the list',
+          type: 'error'
+        });
+      }
+    };
+       
+      // Delete the selected list.
       const handleDeleteConfirm = async () => {
         if (!deleteTarget) return
-        const deletedName = deleteTarget.name
-        try {
-          await dispatch(deleteList(deleteTarget.id)).unwrap()
-          setDeleteTarget(null)
-          toast.add({
-            title: 'List deleted',
-            description: `"${deletedName}" was removed.`,
-            type: 'success',
-          })
-        } catch {
-          setDeleteTarget(null)
-          toast.add({
-            title: 'Something went wrong',
-            description: 'Failed to delete the list. Please try again.',
-            type: 'error'
-            })
-            }
-          }
+          const deletedName = deleteTarget.name
+            try {
+               await dispatch(deleteList(deleteTarget.id)).unwrap()
+                setDeleteTarget(null)
+                 toast.add({
+                   title: 'List deleted',
+                   description: `"${deletedName}" was removed.`,
+                   type: 'success',
+                  });
+             } catch {
+          // keeps the popup open if deletion fails.
+               toast.add({
+                           title: 'Something went wrong',
+                           description: 'Failed to delete the list. Please try again.',
+                           type: 'error'
+                         });
+                        }
+                     }
 
   return (
     <>
       <NavBar />
-
       <div className='mx-auto max-w-6xl space-y-8 px-4 py-10'>
-      
       {/* search & sort */}
       <div className='flex flex-col gap-2 sm:flex-row'>
          {/* Header */}
@@ -119,8 +154,12 @@ export const Home = () => {
           </Button>
       </div>
       
-       {/* empty state */}
-      {lists.length === 0 && !loading ? (
+       {/* shows loading before checking for empty list & empty state */}
+       {loading && lists.length === 0 ? (
+        <p role="status" className="py-10 text-center text-gray-500">
+          Loading your list...
+        </p>
+      ) : lists.length === 0 ? (
         <EmptyState
           title='No lists yet'
           description='Get started by creating your first shopping list. It only takes a few seconds.'
@@ -134,6 +173,7 @@ export const Home = () => {
             <div className='grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'>
               {filteredLists.map((list) => (
                 <div key={list.id} onClick={() => setViewList(list)} className='cursor-pointer rounded-xl border bg-white p-4 hover:border-gray-300'>
+                   {/* use the list's image if it has one, otherwise find the first item with an image. Use that item's image if found. */}
                   {(list.image || list.items.find((item) => item.image)?.image) && (
                     <img src={list.image || list.items.find((item) => item.image)?.image}
                       alt={list.name} className='mb-3 h-36 w-full rounded-lg object-cover' />
@@ -169,7 +209,7 @@ export const Home = () => {
               ))}
             </div>
           )}
-  
+      {/* Shows the form for creating/editing a shopping list. */}
       <ShoppingListForm
         open={formOpen}
         onClose={() => { setFormOpen(false); setEditingList(null) }}
@@ -178,7 +218,8 @@ export const Home = () => {
         startWithNewItem={startWithNewItem}
         loading={loading}
       />
-
+      
+      {/* Asks the user to confirm deleting a list  */}
       <ConfirmationModal
         open={!!deleteTarget}
         title='Delete list?'
@@ -188,13 +229,15 @@ export const Home = () => {
         onCancel={() => setDeleteTarget(null)}
         loading={loading}
       />
-
+       
+       {/* Shows options for sharing the selected list. */}
       <ShareModal 
          open={!!shareTarget}
          listName={shareTarget?.name || ''}
          shareUrl={shareTarget ? `${window.location.origin}/shared/${shareTarget.id}` : ''}
          onClose={() => setShareTarget(null)} />
-
+       
+       {/* shows the selected list's details and allow editing */}
       <ListDetailModal 
                 open={!!viewingList}
                 list={viewingList}
