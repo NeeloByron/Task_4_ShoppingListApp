@@ -1,4 +1,4 @@
-
+// tailwind extensions from shadcn
 type EmptyStateProps = {
     title: string
     description: string 
