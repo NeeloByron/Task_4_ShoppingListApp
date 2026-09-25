@@ -31,18 +31,6 @@ export const NavBar = () => {
              ShoppingAppList
            </div>
 
-          {/* Desktop links 
-           <div className='hidden items-center gap-6 md:flex'>
-           {navLinks.map((link) => (
-             <Link
-               key={link.to}
-               to={link.to}
-               className='text-sm font-medium text-gray-100 hover:text-gray-500'>
-               {link.label}
-             </Link>
-           ))}
-         </div> */}
-
         {/* Desktop user info + logout */}
         <div className='hidden items-center gap-4 md:flex'>
           <Link to='/profile' className='flex items-center gap-2 text-sm text-gray-100 hover:text-gray-500'>
